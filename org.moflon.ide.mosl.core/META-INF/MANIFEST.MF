@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.moflon.ide.mosl.core
+Bundle-SymbolicName: org.moflon.ide.mosl.core;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.ui,
+ org.moflon.core.utilities
+Export-Package: org.moflon.ide.mosl.core.exceptions,
+ org.moflon.ide.mosl.core.scoping,
+ org.moflon.ide.mosl.core.scoping.utils
+Import-Package: org.moflon.core.utilities
