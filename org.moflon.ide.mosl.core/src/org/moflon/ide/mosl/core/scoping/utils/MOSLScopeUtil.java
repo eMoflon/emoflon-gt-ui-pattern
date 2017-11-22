@@ -64,9 +64,9 @@ public class MOSLScopeUtil
          if (res == null)
          {
             res = resourceSet.createResource(uri);
-            if (load)
-               res.load(Collections.EMPTY_MAP);
          }
+         if (load)
+            res.load(Collections.EMPTY_MAP);
          return res;
       } catch (IOException e)
       {
