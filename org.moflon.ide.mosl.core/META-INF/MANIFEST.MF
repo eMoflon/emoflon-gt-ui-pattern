@@ -6,8 +6,14 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.ui,
- org.moflon.core.utilities
+ org.moflon.core.utilities,
+ org.eclipse.emf.ecore
 Export-Package: org.moflon.ide.mosl.core.exceptions,
  org.moflon.ide.mosl.core.scoping,
- org.moflon.ide.mosl.core.scoping.utils
+ org.moflon.ide.mosl.core.scoping.utils,
+ org.moflon.ide.mosl.core.ui.highlighting,
+ org.moflon.ide.mosl.core.ui.highlighting.exceptions,
+ org.moflon.ide.mosl.core.ui.highlighting.rules,
+ org.moflon.ide.mosl.core.ui.highlighting.utils,
+ org.moflon.ide.mosl.core.utils
 Import-Package: org.moflon.core.utilities

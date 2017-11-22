@@ -1,6 +1,7 @@
 grammar org.moflon.gt.mosl.pattern.language.MOSLPattern with org.eclipse.xtext.common.Terminals
 
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+//import "platform:/plugin/org.moflon.sdm.constraints.operationspecification/model/Operationspecification.ecore" as ospec
 
 generate moslPattern "http://www.moflon.org/gt/mosl/pattern/language/MOSLPattern"
 
@@ -12,14 +13,29 @@ GraphTransformationPatternFile:
 ;
 
 PatternModule:'module' name = ID '{'
-	patterns += PatternDef*
+		definitions += Definition*
 	'}'
 ;
 
+Definition:ConstraintDef | PatternDef;
+
+ConstraintDef: (isPublic?='public')? 'defineConstraint' name = ID '(' (parameters += ConstraintDefParameter) (',' parameters += ConstraintDefParameter)* ')';
+
+ConstraintDefParameter:name = ID ':' type = [ecore::EDataType | QualifiedName];
+
 PatternDef:'pattern' name=ID '(' (parameters += PatternParameter)? (',' parameters += PatternParameter)* ')' '{'	
 	variables += NACAndObjectVariable*
+	csps = ComplexAttributeConstraints?
 	'}'
 ;
+
+ComplexAttributeConstraints:{ComplexAttributeConstraints} 'attributeConstraints' '{' 
+	constraints += Constraint*
+'}';
+
+Constraint: name = [ConstraintDef] '(' args += ConstraintArgument? (',' args += ConstraintArgument)*')';
+
+ConstraintArgument: AttributeExpression | LiteralExpression | EnumExpression;
 
 NACAndObjectVariable:NACGroup | ObjectVariablePattern;
 
@@ -38,11 +54,11 @@ PatternParameter:ObjectVariablePattern;
 
 
 AttributeConstraint:
-	attribute = [ecore::EAttribute] op=('==' | '!=' | '<=' | '>=' | '>' | '<') valueExp = Expression
+	name = [ecore::EAttribute] op=('==' | '!=' | '<=' | '>=' | '>' | '<') valueExp = Expression
 ;
 
 AttributeAssignment:
-	attribute = [ecore::EAttribute] op=':=' valueExp = Expression
+	name = [ecore::EAttribute] op=':=' valueExp = Expression
 ;
 
 Expression:
@@ -54,21 +70,45 @@ EnumExpression:
 ;
 
 AttributeExpression:
-	objectVar = [ObjectVariablePattern] '.' attribute = [ecore::EAttribute]
+	objectVar = [ObjectVariablePattern] '.' name = [ecore::EAttribute]
 ;
 
 LiteralExpression:
-	value = LiteralValue
+	IntegerLiteralExpression | DecimalLiteralExpression | StringLiteralExpression | BooleanLiteralExpression
+;
+
+IntegerLiteralExpression:
+	value = IntegerLiteralValue
+;
+
+DecimalLiteralExpression:
+	value = DecimalLiteralValue
+;
+
+StringLiteralExpression:
+	value = StringLiteralValue
+;
+
+BooleanLiteralExpression:
+	value = BooleanLiteralValue
 ;
 
 LinkVariablePattern:
-	(op = Operator)? '-' type = [ecore::EReference] '->' target = [ObjectVariablePattern]
+	(op = Operator)? '-' reference = [ecore::EReference] '->' target = [ObjectVariablePattern]
 ;
 
 Operator:
 	value = OPERATOR_VALUE
 ;
 
+
+BooleanLiteralValue returns ecore::EBoolean:BOOL;
+
+DecimalLiteralValue returns ecore::EDouble:('-')?DECIMAL;
+
+StringLiteralValue returns ecore::EString: STRING;
+
+IntegerLiteralValue returns ecore::EInt: ('-')?INT;
 
 /* ---------------- */
 /*    Auxiliaries   */
@@ -88,10 +128,6 @@ terminal OPERATOR_VALUE: '++'| '!' | '--';
 
 terminal DECIMAL: INT '.' INT;
 
-LiteralValue:
-	(STRING | ('-')?INT | ('-')?DECIMAL | BOOL)
-;
-
 terminal BOOL:
 	'true' | 'false'
 ;
@@ -109,11 +145,13 @@ QualifiedName returns ecore::EString:
 
 AbstractAttribute: AttributeConstraint | AttributeAssignment;
 
+AttributeContainer:AbstractAttribute | AttributeExpression;
+
 PatternObject: PatternVariable | Expression;
 
 PatternVariable:NACAndObjectVariable | LinkVariablePattern;
 
-
+AbstractConstraint: Constraint;
 
 //ObjectVariableDefinition: ;
 

@@ -3,6 +3,14 @@
  */
 package org.moflon.gt.mosl.pattern.language.validation
 
+import org.eclipse.xtext.validation.Check
+import org.moflon.gt.mosl.pattern.language.moslPattern.Constraint
+import org.moflon.gt.mosl.pattern.language.moslPattern.EnumExpression
+import org.moflon.gt.mosl.pattern.language.moslPattern.LiteralExpression
+import org.eclipse.emf.ecore.EDataType
+import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeExpression
+import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintArgument
+import org.moflon.gt.mosl.pattern.language.moslPattern.MoslPatternPackage
 
 /**
  * This class contains custom validation rules. 
@@ -10,6 +18,48 @@ package org.moflon.gt.mosl.pattern.language.validation
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class MOSLPatternValidator extends AbstractMOSLPatternValidator {
+
+public static val TOO_MANY_ARGUMENTS_CONSTRAINTS = 'tooManyArgumentsConstraints'
+public static val TOO_LESS_ARGUMENTS_CONSTRAINTS = 'tooLessArgumentsConstraints'
+public static val CANNOT_RESOLVE_TYPE_CONSTRAINTS = 'cannotResolveTypeConstraints'
+
+@Check
+	def checkCorrectTypeFromArgumentToParameter(Constraint constraint) {
+		val definitionTypes = constraint.name.parameters.map[param|param.type].toList
+		val usedTypes = constraint.args.map[arg|findTypeFromConstraintArgument(arg)].toList
+		
+		if(definitionTypes.size < usedTypes.size){
+			error("Too many arguments for" + constraint.name.name, constraint, MoslPatternPackage.Literals.CONSTRAINT__ARGS, TOO_MANY_ARGUMENTS_CONSTRAINTS)
+		}else if(definitionTypes.size > usedTypes.size){
+			error("Too less arguments for" + constraint.name.name, constraint, MoslPatternPackage.Literals.CONSTRAINT__ARGS, TOO_LESS_ARGUMENTS_CONSTRAINTS)
+		}
+		
+		for(var index = 0; index < usedTypes.size; index++){
+			val defType = definitionTypes.get(index)
+			val usedType = usedTypes.get(index)
+//			val defTypeClass = defType.instanceClass
+//			val usedTypeClass = usedType.instanceClass
+			if(usedType!==defType){				 			
+				error(usedType.name + " cannot be resolved to a variable of " + defType.name, constraint, MoslPatternPackage.Literals.CONSTRAINT__ARGS, CANNOT_RESOLVE_TYPE_CONSTRAINTS)
+			}
+		}
+	}
+
+	def EDataType findTypeFromConstraintArgument(ConstraintArgument constArg) {
+		if (constArg instanceof AttributeExpression) {
+			val type = constArg.getName().getEType();
+			if (type instanceof EDataType)
+				return type;
+		} else if (constArg instanceof LiteralExpression) {
+			return MOSLPatternValidatorUtil.instance.getLiteralExpressionType(constArg);
+		} else if (constArg instanceof EnumExpression) {
+			return constArg.eenum
+		}
+
+		throw new RuntimeException("Wrong Type");
+	}
+
+	
 	
 //	public static val INVALID_NAME = 'invalidName'
 //

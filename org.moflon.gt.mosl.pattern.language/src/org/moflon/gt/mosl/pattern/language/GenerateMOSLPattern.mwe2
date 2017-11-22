@@ -25,6 +25,7 @@ Workflow {
 		}
 		language = StandardLanguage {
 			name = "org.moflon.gt.mosl.pattern.language.MOSLPattern"
+			//referencedResource = "platform:/plugin/org.moflon.sdm.constraints.operationspecification/model/Operationspecification.genmodel"
 			fileExtensions = "mpt"
 
 			serializer = {
