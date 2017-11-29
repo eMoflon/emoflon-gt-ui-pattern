@@ -4,6 +4,16 @@
 package org.moflon.gt.mosl.pattern.language.ui.quickfix
 
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
+import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidator
+import org.eclipse.xtext.validation.Issue
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
+import org.eclipse.xtext.ui.editor.quickfix.Fix
+import org.eclipse.xtext.ui.editor.model.edit.ISemanticModification
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.ui.editor.model.edit.IModificationContext
+import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidatorUtil
+import org.eclipse.core.runtime.NullProgressMonitor
+import org.eclipse.core.resources.IResource
 
 /**
  * Custom quickfixes.
@@ -12,13 +22,44 @@ import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
  */
 class MOSLPatternQuickfixProvider extends DefaultQuickfixProvider {
 
-//	@Fix(MOSLPatternValidator.INVALID_NAME)
-//	def capitalizeName(Issue issue, IssueResolutionAcceptor acceptor) {
-//		acceptor.accept(issue, 'Capitalize name', 'Capitalize the name.', 'upcase.png') [
-//			context |
-//			val xtextDocument = context.xtextDocument
-//			val firstLetter = xtextDocument.get(issue.offset, 1)
-//			xtextDocument.replace(issue.offset, 1, firstLetter.toUpperCase)
-//		]
-//	}
+@Fix(MOSLPatternValidator.LIBRARY_FOLDER_DOES_NOT_EXIST)
+def createFolderAndFile(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(
+			issue,
+			"create necessary resources", // label
+			"creates the library folder and the library file", // description
+			null, // icon 
+			new ISemanticModification() {
+				override apply(EObject element, IModificationContext context) {
+					var monitor = new NullProgressMonitor
+					var libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
+					libFolder.create(true,true, monitor)
+					
+					val libFile = MOSLPatternValidatorUtil.instance.getLibFile(element)
+					libFile.create(null,true, monitor)
+					libFolder.project.refreshLocal(IResource.DEPTH_INFINITE, monitor)
+				}
+			}
+		)
+	}
+	
+	@Fix(MOSLPatternValidator.LIBRARY_FILE_DOES_NOT_EXIST)
+	def createFile(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(
+			issue,
+			"create necessary library file", // label
+			"creates the library file", // description
+			null, // icon 
+			new ISemanticModification() {
+				override apply(EObject element, IModificationContext context) {
+					var monitor = new NullProgressMonitor
+					var libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
+					
+					val libFile = MOSLPatternValidatorUtil.instance.getLibFile(element)
+					libFile.create(null,true, monitor)
+					libFolder.project.refreshLocal(IResource.DEPTH_INFINITE, monitor)
+				}
+			}
+		)
+	}
 }

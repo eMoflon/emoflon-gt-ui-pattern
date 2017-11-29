@@ -11,36 +11,43 @@ import org.eclipse.emf.ecore.EDataType
 import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeExpression
 import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintArgument
 import org.moflon.gt.mosl.pattern.language.moslPattern.MoslPatternPackage
+import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
+import org.eclipse.core.runtime.CoreException
+import org.moflon.gt.mosl.pattern.language.exceptions.LibFolderDoesnNotExistException
+import org.moflon.gt.mosl.pattern.language.exceptions.LibFileDoesnotExitException
 
 /**
  * This class contains custom validation rules. 
- *
+ * 
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class MOSLPatternValidator extends AbstractMOSLPatternValidator {
 
-public static val TOO_MANY_ARGUMENTS_CONSTRAINTS = 'tooManyArgumentsConstraints'
-public static val TOO_LESS_ARGUMENTS_CONSTRAINTS = 'tooLessArgumentsConstraints'
-public static val CANNOT_RESOLVE_TYPE_CONSTRAINTS = 'cannotResolveTypeConstraints'
+	public static val TOO_MANY_ARGUMENTS_CONSTRAINTS = 'tooManyArgumentsConstraints'
+	public static val TOO_FEW_ARGUMENTS_CONSTRAINTS = 'tooFewArgumentsConstraints'
+	public static val CANNOT_RESOLVE_TYPE_CONSTRAINTS = 'cannotResolveTypeConstraints'
+	public static val LIBRARY_FOLDER_DOES_NOT_EXIST = 'libraryFolderDoesNotExist'
+	public static val LIBRARY_FILE_DOES_NOT_EXIST = 'libraryFileDoesNotExist'
+	public static val CONSTRAINT_SPECIFICATION_DOES_NOT_EXIST = 'constraintSpecificationDoesNotExist'
 
-@Check
+	@Check
 	def checkCorrectTypeFromArgumentToParameter(Constraint constraint) {
 		val definitionTypes = constraint.name.parameters.map[param|param.type].toList
 		val usedTypes = constraint.args.map[arg|findTypeFromConstraintArgument(arg)].toList
-		
-		if(definitionTypes.size < usedTypes.size){
-			error("Too many arguments for" + constraint.name.name, constraint, MoslPatternPackage.Literals.CONSTRAINT__ARGS, TOO_MANY_ARGUMENTS_CONSTRAINTS)
-		}else if(definitionTypes.size > usedTypes.size){
-			error("Too less arguments for" + constraint.name.name, constraint, MoslPatternPackage.Literals.CONSTRAINT__ARGS, TOO_LESS_ARGUMENTS_CONSTRAINTS)
+		if (definitionTypes.size < usedTypes.size) {
+			error("Too many arguments for" + constraint.name.name, constraint,
+				MoslPatternPackage.Literals.CONSTRAINT__ARGS, TOO_MANY_ARGUMENTS_CONSTRAINTS)
+		} else if (definitionTypes.size > usedTypes.size) {
+			error("Too few arguments for" + constraint.name.name, constraint,
+				MoslPatternPackage.Literals.CONSTRAINT__ARGS, TOO_FEW_ARGUMENTS_CONSTRAINTS)
 		}
-		
-		for(var index = 0; index < usedTypes.size; index++){
+
+		for (var index = 0; index < usedTypes.size; index++) {
 			val defType = definitionTypes.get(index)
 			val usedType = usedTypes.get(index)
-//			val defTypeClass = defType.instanceClass
-//			val usedTypeClass = usedType.instanceClass
-			if(usedType!==defType){				 			
-				error(usedType.name + " cannot be resolved to a variable of " + defType.name, constraint, MoslPatternPackage.Literals.CONSTRAINT__ARGS, CANNOT_RESOLVE_TYPE_CONSTRAINTS)
+			if (usedType !== defType) {
+				error(usedType.name + " cannot be resolved to a variable of " + defType.name, constraint,
+					MoslPatternPackage.Literals.CONSTRAINT__ARGS, CANNOT_RESOLVE_TYPE_CONSTRAINTS)
 			}
 		}
 	}
@@ -59,17 +66,17 @@ public static val CANNOT_RESOLVE_TYPE_CONSTRAINTS = 'cannotResolveTypeConstraint
 		throw new RuntimeException("Wrong Type");
 	}
 
-	
-	
-//	public static val INVALID_NAME = 'invalidName'
-//
-//	@Check
-//	def checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.name.charAt(0))) {
-//			warning('Name should start with a capital', 
-//					MOSLPatternPackage.Literals.GREETING__NAME,
-//					INVALID_NAME)
-//		}
-//	}
-	
+	@Check
+	def checkConstraintDefIsConnected(ConstraintDef constrainDef){
+		try{
+			val found=MOSLPatternValidatorUtil.instance.isConnected(constrainDef);
+			if(!found)
+			error("ConstrainSpecification: " + constrainDef.name + " does not exist!", constrainDef, MoslPatternPackage.Literals.DEFINITION__NAME, LIBRARY_FOLDER_DOES_NOT_EXIST)
+		}catch (LibFolderDoesnNotExistException lFolderE){
+			error("Library folder not found!", constrainDef, MoslPatternPackage.Literals.DEFINITION__NAME, LIBRARY_FOLDER_DOES_NOT_EXIST)
+		}catch (LibFileDoesnotExitException lFileE){
+			error("Library file not found!", constrainDef, MoslPatternPackage.Literals.DEFINITION__NAME, LIBRARY_FILE_DOES_NOT_EXIST)
+		}
+
+	}
 }

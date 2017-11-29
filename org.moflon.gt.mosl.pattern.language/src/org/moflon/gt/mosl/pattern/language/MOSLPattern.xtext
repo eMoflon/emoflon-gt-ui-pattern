@@ -151,7 +151,5 @@ PatternObject: PatternVariable | Expression;
 
 PatternVariable:NACAndObjectVariable | LinkVariablePattern;
 
-AbstractConstraint: Constraint;
-
 //ObjectVariableDefinition: ;
 
