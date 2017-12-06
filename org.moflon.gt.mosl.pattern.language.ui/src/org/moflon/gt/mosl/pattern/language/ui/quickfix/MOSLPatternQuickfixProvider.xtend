@@ -3,7 +3,6 @@
  */
 package org.moflon.gt.mosl.pattern.language.ui.quickfix
 
-import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
 import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidator
 import org.eclipse.xtext.validation.Issue
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
@@ -13,14 +12,40 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext
 import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidatorUtil
 import org.eclipse.core.runtime.NullProgressMonitor
+import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
+import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IResource
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.core.resources.IProject
+import org.eclipse.core.resources.IncrementalProjectBuilder
 
 /**
  * Custom quickfixes.
  *
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#quick-fixes
  */
-class MOSLPatternQuickfixProvider extends DefaultQuickfixProvider {
+class MOSLPatternQuickfixProvider extends AbstractMOSLPatternQuickfixProvider {
+
+@Fix(MOSLPatternValidator::CONSTRAINT_SPECIFICATION_DOES_NOT_EXIST)
+def createConstraint(Issue issue, IssueResolutionAcceptor acceptor){
+			acceptor.accept(
+			issue,
+			"create constraint specification", // label
+			"creates a ConstraintSpecification in the library", // description
+			null, // icon 
+			new ISemanticModification() {
+				override apply(EObject element, IModificationContext context) {					
+					if(element instanceof ConstraintDef)
+						MOSLPatternValidatorUtil.instance.addConstraintSpecificationToLib(element)
+					val libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
+					val project = libFolder.project
+					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor)
+					element.eResource.modified = true				
+				}
+			}
+		)
+}
+
 
 @Fix(MOSLPatternValidator.LIBRARY_FOLDER_DOES_NOT_EXIST)
 def createFolderAndFile(Issue issue, IssueResolutionAcceptor acceptor){
@@ -31,16 +56,16 @@ def createFolderAndFile(Issue issue, IssueResolutionAcceptor acceptor){
 			null, // icon 
 			new ISemanticModification() {
 				override apply(EObject element, IModificationContext context) {
-					var monitor = new NullProgressMonitor
-					var libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
+					val monitor = new NullProgressMonitor
+					val libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
 					libFolder.create(true,true, monitor)
 					
-					val libFile = MOSLPatternValidatorUtil.instance.getLibFile(element)
-					libFile.create(null,true, monitor)
-					libFolder.project.refreshLocal(IResource.DEPTH_INFINITE, monitor)
+					if(element instanceof ConstraintDef)
+						createNewFile(element,libFolder)
 				}
 			}
 		)
+		
 	}
 	
 	@Fix(MOSLPatternValidator.LIBRARY_FILE_DOES_NOT_EXIST)
@@ -52,14 +77,23 @@ def createFolderAndFile(Issue issue, IssueResolutionAcceptor acceptor){
 			null, // icon 
 			new ISemanticModification() {
 				override apply(EObject element, IModificationContext context) {
-					var monitor = new NullProgressMonitor
 					var libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
-					
-					val libFile = MOSLPatternValidatorUtil.instance.getLibFile(element)
-					libFile.create(null,true, monitor)
-					libFolder.project.refreshLocal(IResource.DEPTH_INFINITE, monitor)
+					if(element instanceof ConstraintDef)
+						createNewFile(element,libFolder)
 				}
 			}
 		)
+	}
+	
+	def createNewFile(ConstraintDef constraintDef, IFolder libFolder){
+		MOSLPatternValidatorUtil.instance.createLibFile(constraintDef);
+		val project = libFolder.project
+		update(project, constraintDef.eResource)		
+	}
+	
+	def update(IProject project, Resource resource){
+		project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor)
+		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
+		resource.modified = true
 	}
 }

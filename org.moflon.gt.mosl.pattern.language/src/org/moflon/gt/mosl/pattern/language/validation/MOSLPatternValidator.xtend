@@ -12,7 +12,6 @@ import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeExpression
 import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintArgument
 import org.moflon.gt.mosl.pattern.language.moslPattern.MoslPatternPackage
 import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
-import org.eclipse.core.runtime.CoreException
 import org.moflon.gt.mosl.pattern.language.exceptions.LibFolderDoesnNotExistException
 import org.moflon.gt.mosl.pattern.language.exceptions.LibFileDoesnotExitException
 
@@ -21,7 +20,7 @@ import org.moflon.gt.mosl.pattern.language.exceptions.LibFileDoesnotExitExceptio
  * 
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
-class MOSLPatternValidator extends AbstractMOSLPatternValidator {
+class MOSLPatternValidator extends AbstractMOSLPatternValidation {
 
 	public static val TOO_MANY_ARGUMENTS_CONSTRAINTS = 'tooManyArgumentsConstraints'
 	public static val TOO_FEW_ARGUMENTS_CONSTRAINTS = 'tooFewArgumentsConstraints'
@@ -65,13 +64,12 @@ class MOSLPatternValidator extends AbstractMOSLPatternValidator {
 
 		throw new RuntimeException("Wrong Type");
 	}
-
 	@Check
 	def checkConstraintDefIsConnected(ConstraintDef constrainDef){
 		try{
 			val found=MOSLPatternValidatorUtil.instance.isConnected(constrainDef);
 			if(!found)
-			error("ConstrainSpecification: " + constrainDef.name + " does not exist!", constrainDef, MoslPatternPackage.Literals.DEFINITION__NAME, LIBRARY_FOLDER_DOES_NOT_EXIST)
+			error("ConstrainSpecification: " + constrainDef.name + " does not exist!", constrainDef, MoslPatternPackage.Literals.DEFINITION__NAME, CONSTRAINT_SPECIFICATION_DOES_NOT_EXIST)
 		}catch (LibFolderDoesnNotExistException lFolderE){
 			error("Library folder not found!", constrainDef, MoslPatternPackage.Literals.DEFINITION__NAME, LIBRARY_FOLDER_DOES_NOT_EXIST)
 		}catch (LibFileDoesnotExitException lFileE){

@@ -31,6 +31,7 @@ import org.moflon.gt.mosl.pattern.language.moslPattern.ComplexAttributeConstrain
 import org.moflon.gt.mosl.pattern.language.moslPattern.Constraint
 import org.moflon.gt.mosl.pattern.language.moslPattern.PatternModule
 import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
+import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidatorUtil
 
 /**
  * This class contains custom scoping description.
@@ -41,7 +42,7 @@ import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
 class MOSLPatternScopeProvider extends AbstractMOSLPatternScopeProvider {
 	private ScopeProviderHelper<EPackage> scopeHelper = new ScopeProviderHelper();
 	private Logger log = Logger.getLogger(MOSLPatternScopeProvider.getClass())
-	public static MOSLPatternHelper patternHelper = new MOSLPatternHelper 
+	 
 	
 	override getScope(EObject context, EReference reference) {
 	try{
@@ -86,7 +87,7 @@ class MOSLPatternScopeProvider extends AbstractMOSLPatternScopeProvider {
 	def getScopeForConstraint(Constraint constraint){
 		val patternmodule = MOSLScopeUtil.instance.getRootObject(constraint, PatternModule)
 		val candidates = MOSLUtil.instance.mapToSubtype(patternmodule.definitions, ConstraintDef)
-		candidates.addAll(patternHelper.buildInConstraints)
+		candidates.addAll(MOSLPatternValidatorUtil.instance.patternHelper.buildInConstraints)
 		Scopes.scopeFor(candidates)
 	}
 	

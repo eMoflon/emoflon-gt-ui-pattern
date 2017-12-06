@@ -3,6 +3,7 @@ package org.moflon.gt.mosl.pattern.language.utils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,11 +27,11 @@ public class MOSLPatternHelper
 
    private final AttributeConstraintLibrary buildInLibrary;
 
-   private final List<ConstraintDef> convertedBuildIns;
+   private final Set<ConstraintDef> convertedConstraints;
 
    private ResourceSet resSet;
 
-   private Map<ConstraintDef, ConstraintSpecification> specificationMap;
+   private Map<String, ConstraintSpecification> specificationMap;
 
    public MOSLPatternHelper()
    {
@@ -38,11 +39,11 @@ public class MOSLPatternHelper
       resSet = MOSLScopeUtil.getInstance().getResourceSet();
       OperationspecificationPackage.eINSTANCE.eClass();
       buildInLibrary = MOSLScopeUtil.getInstance().getObjectFromResourceSet(URI.createURI(BUILD_IN_PATH), resSet, AttributeConstraintLibrary.class);
-      convertedBuildIns = buildInLibrary.getConstraintSpecifications().parallelStream().filter(this::isEDataType).map(this::convertToPatternConstraints)
-            .collect(Collectors.toList());
+      convertedConstraints = buildInLibrary.getConstraintSpecifications().parallelStream().filter(this::isEDataType).map(this::convertToPatternConstraints)
+            .collect(Collectors.toSet());
       PatternModule pm = MoslPatternFactory.eINSTANCE.createPatternModule();
       pm.setName("BuildInLibrary");
-      pm.getDefinitions().addAll(convertedBuildIns);
+      pm.getDefinitions().addAll(convertedConstraints);
       GraphTransformationPatternFile gtpf = MoslPatternFactory.eINSTANCE.createGraphTransformationPatternFile();
       gtpf.getModules().add(pm);
       MOSLScopeUtil.getInstance().addToResource(URI.createURI("src/org/moflon/gt/buildinlibrary/library.mpt"), resSet, gtpf);
@@ -50,12 +51,13 @@ public class MOSLPatternHelper
 
    public void setConnection(ConstraintDef constraintDef, ConstraintSpecification constraintSpecification)
    {
-      specificationMap.put(constraintDef, constraintSpecification);
+      specificationMap.put(constraintDef.getName(), constraintSpecification);
+     // convertedConstraints.add(constraintDef);
    }
 
    public boolean isConnected(ConstraintDef constraintDef)
    {
-      return specificationMap.containsKey(constraintDef);
+     return specificationMap.containsKey(constraintDef.getName());
    }
 
    private boolean isEDataType(ConstraintSpecification conSpec)
@@ -73,7 +75,7 @@ public class MOSLPatternHelper
       ins = 0;
       constDef.getParameters().addAll(parameters.stream().map(this::convertParameters).collect(Collectors.toList()));
       constDef.setIsPublic(true);
-      setConnection(constDef, conSpec);
+      specificationMap.put(constDef.getName(), conSpec);
       return constDef;
    }
 
@@ -120,9 +122,9 @@ public class MOSLPatternHelper
       return constDefParam;
    }
 
-   public List<ConstraintDef> getBuildInConstraints()
+   public Set<ConstraintDef> getBuildInConstraints()
    {
-      return convertedBuildIns;
+      return convertedConstraints;
    }
    
    private boolean sameTypeParmeter(ConstraintDef constrainDef, ConstraintSpecification spec){

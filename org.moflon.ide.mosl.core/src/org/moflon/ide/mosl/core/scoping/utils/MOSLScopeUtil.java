@@ -1,9 +1,12 @@
 package org.moflon.ide.mosl.core.scoping.utils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -44,6 +47,12 @@ public class MOSLScopeUtil
       return null;
    }
 
+   public <E extends EObject> List<E> getObjectsFromResource(Resource resource, Class<E> clazz){
+      List<EObject> allContent = new ArrayList<>();
+      resource.getAllContents().forEachRemaining(allContent::add);
+      return allContent.parallelStream().filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toList());
+   }
+   
    public <E extends EObject> E getObjectFromResourceSet(URI uri, ResourceSet resourceSet, Class<E> clazz)
    {
       Resource res = getResource(uri, resourceSet, true);
