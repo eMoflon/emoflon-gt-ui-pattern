@@ -7,7 +7,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.ui,
  org.moflon.core.utilities,
- org.eclipse.emf.ecore
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.util
 Export-Package: org.moflon.ide.mosl.core.exceptions,
  org.moflon.ide.mosl.core.scoping,
  org.moflon.ide.mosl.core.scoping.utils,

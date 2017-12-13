@@ -83,7 +83,7 @@ public class ScopeProviderHelper <E extends EObject> {
 			if (currentFound != null){
 			   candidates.addAll(currentFound);
 			}
-			return Scopes.scopeFor(candidates);
+			return new MoflonSimpleScope(candidates);
 		}catch (Exception ioobe){
 			throw new CannotFindScopeException("Cannot find Resource");
 		}

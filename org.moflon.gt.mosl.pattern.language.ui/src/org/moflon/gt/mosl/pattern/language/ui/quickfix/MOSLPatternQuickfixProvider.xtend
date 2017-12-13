@@ -40,7 +40,7 @@ def createConstraint(Issue issue, IssueResolutionAcceptor acceptor){
 					val libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
 					val project = libFolder.project
 					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor)
-					element.eResource.modified = true				
+					update(element.eResource)			
 				}
 			}
 		)
@@ -94,6 +94,6 @@ def createFolderAndFile(Issue issue, IssueResolutionAcceptor acceptor){
 	def update(IProject project, Resource resource){
 		project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor)
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
-		resource.modified = true
+		update(resource)
 	}
 }
