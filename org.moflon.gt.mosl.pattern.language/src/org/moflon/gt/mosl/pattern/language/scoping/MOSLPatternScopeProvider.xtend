@@ -17,17 +17,13 @@ import org.moflon.gt.mosl.pattern.language.moslPattern.GraphTransformationPatter
 import org.eclipse.emf.common.util.URI
 import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDefParameter
 import java.util.List
-import org.eclipse.emf.ecore.EcoreFactory
 import org.eclipse.emf.ecore.EDataType
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.moflon.ide.mosl.core.scoping.utils.MOSLScopeUtil
 import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeExpression
 import org.eclipse.xtext.scoping.Scopes
 import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeContainer
 import org.moflon.gt.mosl.pattern.language.moslPattern.AbstractAttribute
 import org.moflon.ide.mosl.core.utils.MOSLUtil
-import org.moflon.gt.mosl.pattern.language.utils.MOSLPatternHelper
-import org.moflon.gt.mosl.pattern.language.moslPattern.ComplexAttributeConstraints
 import org.moflon.gt.mosl.pattern.language.moslPattern.Constraint
 import org.moflon.gt.mosl.pattern.language.moslPattern.PatternModule
 import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
