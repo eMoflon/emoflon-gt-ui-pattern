@@ -1,7 +1,6 @@
 package org.moflon.ide.mosl.core.ui.highlighting.utils;
 
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.xtext.ui.editor.syntaxcoloring.DefaultHighlightingConfiguration;
 import org.moflon.ide.mosl.core.ui.highlighting.MOSLHighlightProviderController;
 
 public class MOSLColorManager

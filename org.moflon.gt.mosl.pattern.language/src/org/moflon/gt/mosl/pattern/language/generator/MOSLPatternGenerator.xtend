@@ -7,17 +7,10 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
-import org.moflon.ide.mosl.core.scoping.utils.MOSLScopeUtil
-import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
-import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidator
-import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidatorUtil
-import org.moflon.gt.mosl.pattern.language.exceptions.LibFolderDoesnNotExistException
-import org.moflon.gt.mosl.pattern.language.moslPattern.MoslPatternPackage
-import org.moflon.gt.mosl.pattern.language.exceptions.LibFileDoesnotExitException
 
 /**
  * Generates code from your model files on save.
- * 
+ *
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class MOSLPatternGenerator extends AbstractGenerator {
@@ -26,12 +19,12 @@ class MOSLPatternGenerator extends AbstractGenerator {
 //				val constDefs = MOSLScopeUtil.instance.getObjectsFromResource(resource, ConstraintDef)
 				//constDefs.forEach[constDef | checkConstraintDefIsConnected(constDef)]
 
-//fsa.generateFile('greetings.txt', 'People to greet: ' + 
+//fsa.generateFile('greetings.txt', 'People to greet: ' +
 //			resource.allContents
 //				.filter(Greeting)
 //				.map[name]
 //				.join(', '))
 	}
-	
+
 
 }

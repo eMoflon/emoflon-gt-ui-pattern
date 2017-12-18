@@ -13,7 +13,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.Scopes;
 import org.moflon.ide.mosl.core.exceptions.CannotFindScopeException;
 import org.moflon.ide.mosl.core.scoping.utils.MOSLScopeUtil;
 

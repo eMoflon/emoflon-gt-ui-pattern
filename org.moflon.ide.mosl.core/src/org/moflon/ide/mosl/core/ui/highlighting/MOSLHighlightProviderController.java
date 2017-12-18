@@ -7,12 +7,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.xtext.ide.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
-import org.eclipse.xtext.ide.editor.syntaxcoloring.DefaultSemanticHighlightingCalculator;
 import org.moflon.ide.mosl.core.ui.highlighting.exceptions.IDAlreadyExistException;
 import org.moflon.ide.mosl.core.ui.highlighting.rules.AbstractHighlightingRule;
-import org.moflon.ide.mosl.core.ui.highlighting.utils.MOSLColor;
 import org.moflon.ide.mosl.core.ui.highlighting.utils.MOSLColorManager;
+
 import com.google.inject.Binder;
 
 public class MOSLHighlightProviderController {

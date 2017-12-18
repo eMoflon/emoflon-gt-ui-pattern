@@ -6,32 +6,28 @@ import org.eclipse.xtext.ide.editor.syntaxcoloring.IHighlightedPositionAcceptor;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfigurationAcceptor;
 import org.eclipse.xtext.ui.editor.utils.TextStyle;
-import org.moflon.core.utilities.LogUtils;
-import org.moflon.ide.mosl.core.ui.highlighting.MOSLHighlightProviderController;
-import org.moflon.ide.mosl.core.ui.highlighting.exceptions.IDAlreadyExistException;
-
 
 public abstract class AbstractHighlightingRule{
 
 	protected Logger logger;
-	
+
 	protected String id;
-	
+
 	protected String description;
-	
+
 	private int prio=50;
-	
+
 	private IHighlightedPositionAcceptor acceptor;
-	
+
 	public AbstractHighlightingRule(String id, String description){
 		init(id, description);
 	}
-	
+
 	public AbstractHighlightingRule(String id, String description, int prio){
 		this.prio = prio;
 		init(id, description);
 	}
-	
+
 	private void init(String id, String description){
 		logger = Logger.getLogger(this.getClass());
 		this.id = id;
@@ -42,18 +38,18 @@ public abstract class AbstractHighlightingRule{
 //         LogUtils.error(logger, e);
 //		}
 	}
-	
+
 	protected void setHighlighting(INode node){
 		acceptor.addPosition(node.getOffset(), node.getLength() , id);
 	}
-	
+
 	protected abstract TextStyle getTextStyle();
-	
+
 	public void setHighlightingConfiguration(IHighlightingConfigurationAcceptor acceptor){
 		acceptor.
 		acceptDefaultHighlighting(id, description, getTextStyle());
 	}
-	
+
 	public boolean canProvideHighlighting(EObject moslObject, INode node, IHighlightedPositionAcceptor acceptor){
 		boolean provide = getHighlightingConditions(moslObject, node);
 		if(provide){
@@ -62,13 +58,13 @@ public abstract class AbstractHighlightingRule{
 		}
 		return provide;
 	}
-	
+
 	public int getPriority(){
 		return prio;
 	}
-	
+
 	protected abstract boolean getHighlightingConditions(EObject moslObject, INode node);
-	
+
 	public String getID(){
 		return id;
 	}
