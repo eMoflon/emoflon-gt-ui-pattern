@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<feature id="org.moflon.gt.mosl.pattern.language.feature"
-	label="MOSLPattern Feature "
-	version="1.0.0.qualifier">
-	<plugin
-			id="org.moflon.gt.mosl.pattern.language"
-			download-size="0"
-			install-size="0"
-			version="0.0.0"
-			unpack="false"/>
-	<plugin
-			id="org.moflon.gt.mosl.pattern.language.ide"
-			download-size="0"
-			install-size="0"
-			version="0.0.0"
-			unpack="false"/>
-	<plugin
-			id="org.moflon.gt.mosl.pattern.language.ui"
-			download-size="0"
-			install-size="0"
-			version="0.0.0"
-			unpack="false"/>
+<feature
+      id="org.moflon.gt.mosl.pattern.language.feature"
+      label="MOSLPattern Feature "
+      version="1.0.0.qualifier">
+
+   <requires>
+      <import feature="org.moflon.ide.feature" version="2.31.0.201707200910"/>
+   </requires>
+
+   <plugin
+         id="org.moflon.gt.mosl.pattern.language"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.moflon.gt.mosl.pattern.language.ide"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.moflon.gt.mosl.pattern.language.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
