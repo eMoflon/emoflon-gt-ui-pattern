@@ -3,22 +3,97 @@
  */
 package org.moflon.gt.mosl.pattern.language.ui.quickfix
 
-import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
+import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidator
+import org.eclipse.xtext.validation.Issue
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
+import org.eclipse.xtext.ui.editor.quickfix.Fix
+import org.eclipse.xtext.ui.editor.model.edit.ISemanticModification
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.ui.editor.model.edit.IModificationContext
+import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidatorUtil
+import org.eclipse.core.runtime.NullProgressMonitor
+import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
+import org.eclipse.core.resources.IFolder
+import org.eclipse.core.resources.IResource
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.core.resources.IProject
+import org.eclipse.core.resources.IncrementalProjectBuilder
 
 /**
  * Custom quickfixes.
  *
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#quick-fixes
  */
-class MOSLPatternQuickfixProvider extends DefaultQuickfixProvider {
+class MOSLPatternQuickfixProvider extends AbstractMOSLPatternQuickfixProvider {
 
-//	@Fix(MOSLPatternValidator.INVALID_NAME)
-//	def capitalizeName(Issue issue, IssueResolutionAcceptor acceptor) {
-//		acceptor.accept(issue, 'Capitalize name', 'Capitalize the name.', 'upcase.png') [
-//			context |
-//			val xtextDocument = context.xtextDocument
-//			val firstLetter = xtextDocument.get(issue.offset, 1)
-//			xtextDocument.replace(issue.offset, 1, firstLetter.toUpperCase)
-//		]
-//	}
+@Fix(MOSLPatternValidator::CONSTRAINT_SPECIFICATION_DOES_NOT_EXIST)
+def createConstraint(Issue issue, IssueResolutionAcceptor acceptor){
+			acceptor.accept(
+			issue,
+			"create constraint specification", // label
+			"creates a ConstraintSpecification in the library", // description
+			null, // icon 
+			new ISemanticModification() {
+				override apply(EObject element, IModificationContext context) {					
+					if(element instanceof ConstraintDef)
+						MOSLPatternValidatorUtil.instance.addConstraintSpecificationToLib(element)
+					val libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
+					val project = libFolder.project
+					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor)
+					update(element.eResource)			
+				}
+			}
+		)
+}
+
+
+@Fix(MOSLPatternValidator.LIBRARY_FOLDER_DOES_NOT_EXIST)
+def createFolderAndFile(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(
+			issue,
+			"create necessary resources", // label
+			"creates the library folder and the library file", // description
+			null, // icon 
+			new ISemanticModification() {
+				override apply(EObject element, IModificationContext context) {
+					val monitor = new NullProgressMonitor
+					val libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
+					libFolder.create(true,true, monitor)
+					
+					if(element instanceof ConstraintDef)
+						createNewFile(element,libFolder)
+				}
+			}
+		)
+		
+	}
+	
+	@Fix(MOSLPatternValidator.LIBRARY_FILE_DOES_NOT_EXIST)
+	def createFile(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(
+			issue,
+			"create necessary library file", // label
+			"creates the library file", // description
+			null, // icon 
+			new ISemanticModification() {
+				override apply(EObject element, IModificationContext context) {
+					var libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
+					if(element instanceof ConstraintDef)
+						createNewFile(element,libFolder)
+				}
+			}
+		)
+	}
+	
+	def createNewFile(ConstraintDef constraintDef, IFolder libFolder){
+		MOSLPatternValidatorUtil.instance.createLibFile(constraintDef);
+		val project = libFolder.project
+		update(project, constraintDef.eResource)		
+	}
+	
+	def update(IProject project, Resource resource){
+		project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor)
+		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
+		update(resource)
+	}
 }

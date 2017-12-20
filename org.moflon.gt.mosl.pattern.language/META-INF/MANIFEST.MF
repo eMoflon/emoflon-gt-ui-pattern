@@ -16,17 +16,21 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.emf.common,
  org.moflon.core.utilities,
  org.moflon.sdm.compiler.eclipse,
- org.moflon.ide.mosl.core
+ org.moflon.ide.mosl.core,
+ org.moflon.sdm.constraints.operationspecification,
+ org.moflon.sdm.constraints.constraintstodemocles
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.moflon.gt.mosl.pattern.language,
- org.moflon.gt.mosl.pattern.language.moslPattern.util,
+ org.moflon.gt.mosl.pattern.language.generator,
  org.moflon.gt.mosl.pattern.language.moslPattern,
+ org.moflon.gt.mosl.pattern.language.moslPattern.impl,
+ org.moflon.gt.mosl.pattern.language.moslPattern.util,
+ org.moflon.gt.mosl.pattern.language.parser.antlr,
+ org.moflon.gt.mosl.pattern.language.parser.antlr.internal,
  org.moflon.gt.mosl.pattern.language.scoping,
  org.moflon.gt.mosl.pattern.language.serializer,
- org.moflon.gt.mosl.pattern.language.parser.antlr.internal,
- org.moflon.gt.mosl.pattern.language.generator,
  org.moflon.gt.mosl.pattern.language.services,
- org.moflon.gt.mosl.pattern.language.moslPattern.impl,
- org.moflon.gt.mosl.pattern.language.parser.antlr,
+ org.moflon.gt.mosl.pattern.language.utils,
  org.moflon.gt.mosl.pattern.language.validation
-Import-Package: org.apache.log4j
+Import-Package: org.apache.log4j,
+ org.eclipse.core.resources
