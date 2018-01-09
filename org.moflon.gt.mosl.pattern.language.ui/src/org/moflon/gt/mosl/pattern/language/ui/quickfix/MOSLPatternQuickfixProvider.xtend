@@ -26,74 +26,73 @@ import org.eclipse.core.resources.IncrementalProjectBuilder
  */
 class MOSLPatternQuickfixProvider extends AbstractMOSLPatternQuickfixProvider {
 
-@Fix(MOSLPatternValidator::CONSTRAINT_SPECIFICATION_DOES_NOT_EXIST)
-def createConstraint(Issue issue, IssueResolutionAcceptor acceptor){
-			acceptor.accept(
-			issue,
-			"create constraint specification", // label
-			"creates a ConstraintSpecification in the library", // description
-			null, // icon 
-			new ISemanticModification() {
-				override apply(EObject element, IModificationContext context) {					
-					if(element instanceof ConstraintDef)
-						MOSLPatternValidatorUtil.instance.addConstraintSpecificationToLib(element)
-					val libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
-					val project = libFolder.project
-					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor)
-					update(element.eResource)			
-				}
-			}
-		)
-}
+    @Fix(MOSLPatternValidator::CONSTRAINT_SPECIFICATION_DOES_NOT_EXIST)
+    def createConstraint(Issue issue, IssueResolutionAcceptor acceptor) {
+        acceptor.accept(
+            issue,
+            "Create user-defined constraint specification", // label
+            "Creates a constraint specification in the user-defined-constraints library", // description
+            null, // icon
+            new ISemanticModification() {
+                override apply(EObject element, IModificationContext context) {
+                    if (element instanceof ConstraintDef)
+                        MOSLPatternValidatorUtil.instance.addConstraintSpecificationToLib(element)
+                    val libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
+                    val project = libFolder.project
+                    project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor)
+                    update(element.eResource)
+                }
+            }
+        )
+    }
 
+    @Fix(MOSLPatternValidator.LIBRARY_FOLDER_DOES_NOT_EXIST)
+    def createFolderAndFile(Issue issue, IssueResolutionAcceptor acceptor) {
+        acceptor.accept(
+            issue,
+            "Create user-defined-constraints library file", // label
+            "Creates the missing user-defined-constraints library file in the /lib folder of the containing project", // description
+            null, // icon
+            new ISemanticModification() {
+                override apply(EObject element, IModificationContext context) {
+                    val monitor = new NullProgressMonitor
+                    val libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
+                    libFolder.create(true, true, monitor)
 
-@Fix(MOSLPatternValidator.LIBRARY_FOLDER_DOES_NOT_EXIST)
-def createFolderAndFile(Issue issue, IssueResolutionAcceptor acceptor){
-		acceptor.accept(
-			issue,
-			"create necessary resources", // label
-			"creates the library folder and the library file", // description
-			null, // icon 
-			new ISemanticModification() {
-				override apply(EObject element, IModificationContext context) {
-					val monitor = new NullProgressMonitor
-					val libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
-					libFolder.create(true,true, monitor)
-					
-					if(element instanceof ConstraintDef)
-						createNewFile(element,libFolder)
-				}
-			}
-		)
-		
-	}
-	
-	@Fix(MOSLPatternValidator.LIBRARY_FILE_DOES_NOT_EXIST)
-	def createFile(Issue issue, IssueResolutionAcceptor acceptor){
-		acceptor.accept(
-			issue,
-			"create necessary library file", // label
-			"creates the library file", // description
-			null, // icon 
-			new ISemanticModification() {
-				override apply(EObject element, IModificationContext context) {
-					var libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
-					if(element instanceof ConstraintDef)
-						createNewFile(element,libFolder)
-				}
-			}
-		)
-	}
-	
-	def createNewFile(ConstraintDef constraintDef, IFolder libFolder){
-		MOSLPatternValidatorUtil.instance.createLibFile(constraintDef);
-		val project = libFolder.project
-		update(project, constraintDef.eResource)		
-	}
-	
-	def update(IProject project, Resource resource){
-		project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor)
-		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
-		update(resource)
-	}
+                    if (element instanceof ConstraintDef)
+                        createNewFile(element, libFolder)
+                }
+            }
+        )
+
+    }
+
+    @Fix(MOSLPatternValidator.LIBRARY_FILE_DOES_NOT_EXIST)
+    def createFile(Issue issue, IssueResolutionAcceptor acceptor) {
+        acceptor.accept(
+            issue,
+            "Create user-defined-constraints library file", // label
+            "Creates the missing user-defined-constraints library file in the /lib folder of the containing project", // description
+            null, // icon
+            new ISemanticModification() {
+                override apply(EObject element, IModificationContext context) {
+                    var libFolder = MOSLPatternValidatorUtil.instance.getLibFolder(element)
+                    if (element instanceof ConstraintDef)
+                        createNewFile(element, libFolder)
+                }
+            }
+        )
+    }
+
+    def createNewFile(ConstraintDef constraintDef, IFolder libFolder) {
+        MOSLPatternValidatorUtil.instance.createLibFile(constraintDef);
+        val project = libFolder.project
+        update(project, constraintDef.eResource)
+    }
+
+    def update(IProject project, Resource resource) {
+        project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor)
+        project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
+        update(resource)
+    }
 }
