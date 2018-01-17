@@ -14,6 +14,7 @@ import org.moflon.gt.mosl.pattern.language.moslPattern.MoslPatternPackage
 import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
 import org.moflon.gt.mosl.pattern.language.exceptions.LibFolderDoesnNotExistException
 import org.moflon.gt.mosl.pattern.language.exceptions.LibFileDoesnotExitException
+import org.moflon.gt.mosl.pattern.language.moslPattern.TemporaryVariableExpression
 
 /**
  * This class contains custom validation rules. 
@@ -31,7 +32,7 @@ class MOSLPatternValidator extends AbstractMOSLPatternValidation {
 
 	@Check
 	def checkCorrectTypeFromArgumentToParameter(Constraint constraint) {
-		val definitionTypes = constraint.name.parameters.map[param|param.type].toList
+		val definitionTypes = constraint.name.parameters.map[param|param.EType].toList
 		val usedTypes = constraint.args.map[arg|findTypeFromConstraintArgument(arg)].toList
 		if (definitionTypes.size < usedTypes.size) {
 			error("Too many arguments for" + constraint.name.name, constraint,
@@ -60,6 +61,8 @@ class MOSLPatternValidator extends AbstractMOSLPatternValidation {
 			return MOSLPatternValidatorUtil.instance.getLiteralExpressionType(constArg);
 		} else if (constArg instanceof EnumExpression) {
 			return constArg.eenum
+		}else if(constArg instanceof TemporaryVariableExpression){
+			return constArg.value.EType as EDataType
 		}
 
 		throw new RuntimeException("Wrong Type");

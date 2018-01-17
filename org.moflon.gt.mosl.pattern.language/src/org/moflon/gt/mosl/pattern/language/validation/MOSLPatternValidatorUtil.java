@@ -163,7 +163,7 @@ public class MOSLPatternValidatorUtil
    private ParameterType convertFromConstraintDefPararmeterToParameterType(ConstraintDefParameter constraintDefParameter)
    {
       ParameterType parameterType = OperationspecificationFactory.eINSTANCE.createParameterType();
-      parameterType.setType(constraintDefParameter.getType());
+      parameterType.setType(constraintDefParameter.getEType());
       return parameterType;
    }
    

@@ -117,7 +117,7 @@ public class MOSLPatternHelper
    {
       ConstraintDefParameter constDefParam = MoslPatternFactory.eINSTANCE.createConstraintDefParameter();
       constDefParam.setName("arg" + ins++);
-      constDefParam.setType(EDataType.class.cast(paramType.getType()));
+      constDefParam.setEType(EDataType.class.cast(paramType.getType()));
       return constDefParam;
    }
 
@@ -133,7 +133,7 @@ public class MOSLPatternHelper
          return false;
       
       for(int index =0; index < paramTypes.size(); ++index){
-         if(!paramTypes.get(index).getType().equals(constDefParams.get(index).getType()))
+         if(!paramTypes.get(index).getType().equals(constDefParams.get(index).getEType()))
             return false;
       }
       
