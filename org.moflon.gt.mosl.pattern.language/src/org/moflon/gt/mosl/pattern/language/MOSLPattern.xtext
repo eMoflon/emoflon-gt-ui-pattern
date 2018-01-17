@@ -81,7 +81,7 @@ EnumExpression:
 ;
 
 AttributeExpression:
-	objectVar = [ObjectVariablePattern] '.' name = [ecore::EAttribute]
+	objectVar = [ObjectVariablePattern] '.' name = [ecore::EAttribute] (free ?= "'")?
 ;
 
 LiteralExpression:
@@ -146,6 +146,9 @@ terminal DECIMAL: INT '.' INT;
 terminal BOOL:
 	'true' | 'false'
 ;
+
+@Override 
+terminal STRING:'"' ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|'"') )* '"';
 
 QualifiedNameWithWildcard:
 	QualifiedName '.*'
