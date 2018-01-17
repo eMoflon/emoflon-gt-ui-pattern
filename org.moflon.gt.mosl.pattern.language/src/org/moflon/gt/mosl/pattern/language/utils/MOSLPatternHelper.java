@@ -68,7 +68,7 @@ public class MOSLPatternHelper
    {
       ConstraintDef constDef = MoslPatternFactory.eINSTANCE.createConstraintDef();
       List<ParameterType> parameters = conSpec.getParameterTypes();
-      Set<String> typeNames = parameters.stream().map(param -> param.getType().getName().substring(1)).collect(Collectors.toSet());
+      Set<String> typeNames = parameters.stream().map(param -> param.getType().getName()).collect(Collectors.toSet());
       String name = getNameOfConstraintSpecification(conSpec) + "_" + typeNames.stream().reduce("", (a, b) -> a + b);
       constDef.setName(name);
       ins = 0;
