@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.moflon.gt.mosl.pattern.language.feature"
-      label="MOSLPattern Feature "
+      label="eMoflon MOSL Pattern Language Feature "
       version="1.0.0.qualifier">
 
    <requires>
