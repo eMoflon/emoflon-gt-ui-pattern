@@ -2,6 +2,7 @@ package org.moflon.ide.mosl.core.scoping;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.scoping.IScope;
 import org.moflon.ide.mosl.core.exceptions.CannotFindScopeException;
 import org.moflon.ide.mosl.core.scoping.utils.MOSLScopeUtil;
@@ -55,6 +57,10 @@ public class ScopeProviderHelper <E extends EObject> {
 		}
 	}	
 	
+	public Collection<E> getRoots(){
+		return existingScopingRoots.values();
+	}
+	
 	public IScope createScope(List<URI> uris, Class<E> clazz, Class<? extends EObject> type) throws CannotFindScopeException{
 	     return createScope(uris, clazz, type, null);
 	}  
@@ -70,12 +76,7 @@ public class ScopeProviderHelper <E extends EObject> {
 				
 				for(URI uri : uris){
 					E scopingObject=getScopingObject(uri, clazz);
-					Iterator<EObject> candidateIterator = scopingObject.eAllContents();
-					while(candidateIterator.hasNext()){
-						EObject candidate = candidateIterator.next();
-						if(type.isAssignableFrom(candidate.getClass()))
-							candidates.add(candidate);
-					}
+					candidates.addAll(EcoreUtil2.eAllOfType(scopingObject, type));
 				}
 				oldCandidates.put(type.toGenericString(), candidates);
 			}

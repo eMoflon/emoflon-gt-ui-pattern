@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.moflon.gt.mosl.pattern.language.feature"
-      label="MOSL Pattern Language Feature"
+      label="eMoflon MOSL Pattern Language Feature "
       version="1.0.0.qualifier"
       provider-name="eMoflon Developers"
-      plugin="org.moflon.core.branding">
+      plugin="org.moflon.core.branding"
+      >
 
    <requires>
       <import feature="org.moflon.ide.feature" version="2.32.0"/>
