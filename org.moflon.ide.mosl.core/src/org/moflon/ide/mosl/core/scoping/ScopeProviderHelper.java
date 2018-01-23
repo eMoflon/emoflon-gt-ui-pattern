@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,26 +21,26 @@ public class ScopeProviderHelper <E extends EObject> {
 	private Map<URI, E> existingScopingRoots;
 	private Map<String, List<EObject>> oldCandidates;
 	private ResourceSet resourceSet;
-	
+
 	public ScopeProviderHelper(ResourceSet resSet) {
 		init();
 		resourceSet = resSet;
 	}
-	
+
 	public ScopeProviderHelper() {
 		init();
 		resourceSet = MOSLScopeUtil.getInstance().getResourceSet("ecore");
 	}
-	
+
 	private void init(){
 		existingScopingRoots = new HashMap<>();
 		oldCandidates = new HashMap<>();
 	}
-	
+
 	public ResourceSet getResourceSet(){
 		return resourceSet;
 	}
-	
+
 	private E getScopingObject(URI uri, Class<E> clazz) throws IOException{
 		if(existingScopingRoots.containsKey(uri)){
 			return existingScopingRoots.get(uri);
@@ -55,25 +54,25 @@ public class ScopeProviderHelper <E extends EObject> {
 			existingScopingRoots.put(uri, scopingRoot);
 			return scopingRoot;
 		}
-	}	
-	
+	}
+
 	public Collection<E> getRoots(){
 		return existingScopingRoots.values();
 	}
-	
+
 	public IScope createScope(List<URI> uris, Class<E> clazz, Class<? extends EObject> type) throws CannotFindScopeException{
 	     return createScope(uris, clazz, type, null);
-	}  
-	
+	}
+
 	public <T extends EObject> IScope createScope(List<URI> uris, Class<E> clazz, Class<T> type, List<T> currentFound) throws CannotFindScopeException{
 		try {
 			List<EObject> candidates=null;
 			if(oldCandidates.containsKey(type.toGenericString())){
 				candidates=oldCandidates.get(type.toGenericString());
 			}
-			else {		
+			else {
 				candidates = new ArrayList<>();
-				
+
 				for(URI uri : uris){
 					E scopingObject=getScopingObject(uri, clazz);
 					candidates.addAll(EcoreUtil2.eAllOfType(scopingObject, type));
@@ -87,5 +86,5 @@ public class ScopeProviderHelper <E extends EObject> {
 		}catch (Exception ioobe){
 			throw new CannotFindScopeException("Cannot find Resource");
 		}
-	}	
+	}
 }
