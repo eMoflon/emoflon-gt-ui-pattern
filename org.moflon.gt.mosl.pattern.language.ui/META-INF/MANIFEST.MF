@@ -19,7 +19,7 @@ Require-Bundle: org.moflon.gt.mosl.pattern.language,
  org.eclipse.xtext.xbase.lib,
  org.moflon.ide.ui,
  org.eclipse.jdt.core,
- org.moflon.gt.ide.ui
+ org.moflon.gt.mosl.ide.ui
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.moflon.gt.mosl.pattern.language.ui.internal,
