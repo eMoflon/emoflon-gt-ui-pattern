@@ -411,11 +411,12 @@
  <extension
        point="org.eclipse.ui.newWizards">
     <wizard
-          category="org.moflon.ide.ui.category"
+          category="org.moflon.gt.ide.ui.moslgt"
           class="org.moflon.gt.mosl.pattern.language.ui.wizard.PatternFileWizard"
           icon="Resources/icon/patternIcon.png"
           id="org.moflon.gt.mosl.pattern.language.ui.patternWizard"
-          name="New Pattern File">
+          name="New Pattern File"
+          project="false">
     </wizard>
- </extension>
+    </extension>
 </plugin>

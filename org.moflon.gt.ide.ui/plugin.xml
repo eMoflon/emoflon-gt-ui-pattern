@@ -2,6 +2,13 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.moflon.gt.ide.ui.moslgt"
+            name="MOSL Graph Transformation">
+      </category>
+   </extension>
+    <extension
          point="org.eclipse.ui.menus">
         <menuContribution allPopups="true" locationURI="popup:org.eclipse.ui.popup.any?after=additions">
             <menu icon="Resources/icons/GTLogo.png" id="org.moflon.ide.ui.moslgt" label="MOSL GT"></menu>
