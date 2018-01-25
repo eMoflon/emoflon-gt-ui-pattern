@@ -18,7 +18,7 @@
 
   <properties>
     <tycho-version>1.0.0</tycho-version>
-		<xtextVersion>2.11.0</xtextVersion>
+		<xtextVersion>2.12.0</xtextVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -27,6 +27,7 @@
     <repository>
       <id>oxygen</id>
       <layout>p2</layout>
+      <!--<url>http://download.eclipse.org/releases/neon</url>-->
       <url>http://download.eclipse.org/releases/oxygen</url>
     </repository>
     <repository>
@@ -35,6 +36,19 @@
       <url>http://emoflon.org/eclipse-plugin/beta/updatesite/</url>
     </repository>
   </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+			<id>codehaus-snapshots</id>
+			<name>disable dead 'Codehaus Snapshots' repository, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=481478</name>
+			<url>http://nexus.codehaus.org/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+  </pluginRepositories>
 
   <build>
 		<plugins>
