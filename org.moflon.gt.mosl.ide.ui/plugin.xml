@@ -11,7 +11,7 @@
     <extension
          point="org.eclipse.ui.menus">
         <menuContribution allPopups="true" locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-            <menu icon="Resources/icons/GTLogo.png" id="org.moflon.ide.ui.moslgt" label="MOSL GT"></menu>
+            <menu icon="resources/icons/GTLogo.png" id="org.moflon.ide.ui.moslgt" label="MOSL GT"></menu>
         </menuContribution>
    </extension>
 

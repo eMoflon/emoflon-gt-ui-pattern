@@ -8,7 +8,7 @@
         contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
         default="true"
         extensions="mpt"
-        icon="Resources/icon/patternIcon.png"
+        icon="resources/icon/patternIcon.png"
         id="org.moflon.gt.mosl.pattern.language.MOSLPattern"
         name="MOSLPattern Editor">
 		</editor>
@@ -292,7 +292,7 @@
 	<!-- Quick Outline -->
 	<extension
 		point="org.eclipse.ui.handlers">
-		<handler 
+		<handler
 			class="org.moflon.gt.mosl.pattern.language.ui.MOSLPatternExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
 			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
 			<activeWhen>
@@ -352,7 +352,7 @@
 	</extension>
 	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
-		<handler 
+		<handler
 			class="org.moflon.gt.mosl.pattern.language.ui.MOSLPatternExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
 			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
 			<activeWhen>
@@ -413,7 +413,7 @@
     <wizard
           category="org.moflon.gt.ide.ui.moslgt"
           class="org.moflon.gt.mosl.pattern.language.ui.wizard.PatternFileWizard"
-          icon="Resources/icon/patternIcon.png"
+          icon="resources/icon/patternIcon.png"
           id="org.moflon.gt.mosl.pattern.language.ui.patternWizard"
           name="New Pattern File"
           project="false">
