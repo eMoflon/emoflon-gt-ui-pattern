@@ -22,6 +22,7 @@ class PatternFileTemplate extends WizardFileTemplate {
 		* for imports in your current eclipse runtime use:
 		* import "platform:/resource/something/ecoreFile.ecore"
 		*/
+		«createImportText»
 		
 		/*
 		* module definition
@@ -29,4 +30,12 @@ class PatternFileTemplate extends WizardFileTemplate {
 		'''
 	}
 	
+	def String createImportText(){
+			
+		'''
+		«FOR epackage : epackageImports»
+			import "«epackage.nsURI»"
+		«ENDFOR»
+		'''
+	}
 }

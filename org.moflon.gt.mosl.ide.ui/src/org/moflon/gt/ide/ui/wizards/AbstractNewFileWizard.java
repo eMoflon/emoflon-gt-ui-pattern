@@ -8,21 +8,26 @@ import org.moflon.ide.ui.WorkspaceHelperUI;
 public abstract class AbstractNewFileWizard  extends BasicNewFileResourceWizard{
 
 	private AbstractNewFileInfoPage mainPage;
-	
+	private GetEcoreProjectPage ecoreProjectPage;
 	protected IStructuredSelection selection;
 	
 	@Override
 	public void addPages() {
-		mainPage = createMainPage();
-		addPage(mainPage);
+			mainPage = createMainPage();
+			addPage(mainPage);
+		
+			ecoreProjectPage = new GetEcoreProjectPage(selection);
+			addPage(ecoreProjectPage);
+			
+			ecoreProjectPage.setPreviousPage(mainPage);
 	}
 	
 	abstract protected AbstractNewFileInfoPage createMainPage();
 
 	@Override
 	public boolean performFinish(){
-		IFile file = mainPage.createNewFile();
-
+		mainPage.getWizardFileTemplate().setEPackageImports(ecoreProjectPage.getSelectedPackages());
+		IFile file = mainPage.createNewFile();		
 		WorkspaceHelperUI.openDefaultEditorForFile(file);
 		return true;
 	}
