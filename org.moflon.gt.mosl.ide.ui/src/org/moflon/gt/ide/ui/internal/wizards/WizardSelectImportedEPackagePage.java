@@ -60,8 +60,8 @@ public class WizardSelectImportedEPackagePage extends WizardPage {
 		super(pageName);
 		this.jdtHelper = jdtHelper;
 		selectedPackages = new ArrayList<>();
-		setTitle("Select EPackages for import");
-		setDescription(Messages.WizardSelectImportedEPackagePage_Description);
+		setTitle("Select EPackages for Import");
+		setDescription("Select all imports you need for the file");
 	}
 
 	private void addToSelectedtEPackages(Object object) {

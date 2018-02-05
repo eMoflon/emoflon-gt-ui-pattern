@@ -31,6 +31,7 @@ Export-Package: org.moflon.gt.mosl.pattern.language,
  org.moflon.gt.mosl.pattern.language.serializer,
  org.moflon.gt.mosl.pattern.language.services,
  org.moflon.gt.mosl.pattern.language.utils,
- org.moflon.gt.mosl.pattern.language.validation
+ org.moflon.gt.mosl.pattern.language.validation,
+ org.moflon.gt.mosl.pattern.language.formatting2
 Import-Package: org.apache.log4j,
  org.eclipse.core.resources
