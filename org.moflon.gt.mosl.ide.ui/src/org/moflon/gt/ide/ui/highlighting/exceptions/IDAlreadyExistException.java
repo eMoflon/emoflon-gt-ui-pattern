@@ -1,4 +1,4 @@
-package org.moflon.gt.mosl.ide.core.ui.highlighting.exceptions;
+package org.moflon.gt.ide.ui.highlighting.exceptions;
 
 public class IDAlreadyExistException extends Exception {
 

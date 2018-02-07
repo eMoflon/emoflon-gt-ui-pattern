@@ -1,7 +1,7 @@
-package org.moflon.gt.mosl.ide.core.ui.highlighting.utils;
+package org.moflon.gt.ide.ui.highlighting.utils;
 
 import org.eclipse.swt.graphics.RGB;
-import org.moflon.gt.mosl.ide.core.ui.highlighting.AbstractHighlightingConfiguration;
+import org.moflon.gt.ide.ui.highlighting.AbstractHighlightingConfiguration;
 
 
 

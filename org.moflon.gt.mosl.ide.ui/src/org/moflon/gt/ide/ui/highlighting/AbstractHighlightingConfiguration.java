@@ -1,12 +1,12 @@
-package org.moflon.gt.mosl.ide.core.ui.highlighting;
+package org.moflon.gt.ide.ui.highlighting;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.xtext.ui.editor.syntaxcoloring.DefaultHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfigurationAcceptor;
-import org.moflon.gt.mosl.ide.core.ui.highlighting.rules.IModularConfiguration;
-import org.moflon.gt.mosl.ide.core.ui.highlighting.utils.XtextColorManager;
+import org.moflon.gt.ide.ui.highlighting.rules.IModularConfiguration;
+import org.moflon.gt.ide.ui.highlighting.utils.XtextColorManager;
 
 
 

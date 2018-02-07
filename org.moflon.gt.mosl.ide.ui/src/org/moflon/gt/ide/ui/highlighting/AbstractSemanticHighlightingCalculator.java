@@ -1,4 +1,4 @@
-package org.moflon.gt.mosl.ide.core.ui.highlighting;
+package org.moflon.gt.ide.ui.highlighting;
 
 import java.util.Collection;
 
@@ -9,7 +9,7 @@ import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.moflon.gt.mosl.ide.core.ui.highlighting.rules.AbstractHighlightingRule;
+import org.moflon.gt.ide.ui.highlighting.rules.AbstractHighlightingRule;
 
 
 

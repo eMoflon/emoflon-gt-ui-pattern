@@ -1,4 +1,4 @@
-package org.moflon.gt.mosl.ide.core.ui.highlighting;
+package org.moflon.gt.ide.ui.highlighting;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,9 +9,9 @@ import java.util.Set;
 
 import org.eclipse.xtext.ide.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.DefaultSemanticHighlightingCalculator;
-import org.moflon.gt.mosl.ide.core.ui.highlighting.exceptions.IDAlreadyExistException;
-import org.moflon.gt.mosl.ide.core.ui.highlighting.rules.AbstractHighlightingRule;
-import org.moflon.gt.mosl.ide.core.ui.highlighting.utils.XtextColorManager;
+import org.moflon.gt.ide.ui.highlighting.exceptions.IDAlreadyExistException;
+import org.moflon.gt.ide.ui.highlighting.rules.AbstractHighlightingRule;
+import org.moflon.gt.ide.ui.highlighting.utils.XtextColorManager;
 
 import com.google.inject.Binder;
 

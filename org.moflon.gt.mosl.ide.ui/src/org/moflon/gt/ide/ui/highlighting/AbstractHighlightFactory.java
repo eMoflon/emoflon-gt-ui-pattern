@@ -1,4 +1,4 @@
-package org.moflon.gt.mosl.ide.core.ui.highlighting;
+package org.moflon.gt.ide.ui.highlighting;
 
 public abstract class AbstractHighlightFactory {
 	protected AbstractHighlightProviderController controller;

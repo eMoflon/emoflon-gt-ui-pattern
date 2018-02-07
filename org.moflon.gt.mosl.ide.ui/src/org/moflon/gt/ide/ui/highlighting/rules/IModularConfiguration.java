@@ -1,4 +1,4 @@
-package org.moflon.gt.mosl.ide.core.ui.highlighting.rules;
+package org.moflon.gt.ide.ui.highlighting.rules;
 
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfigurationAcceptor;
 

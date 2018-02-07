@@ -1,10 +1,10 @@
-package org.moflon.gt.mosl.ide.core.ui.highlighting.rules;
+package org.moflon.gt.ide.ui.highlighting.rules;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfigurationAcceptor;
 import org.eclipse.xtext.ui.editor.utils.TextStyle;
-import org.moflon.gt.mosl.ide.core.ui.highlighting.AbstractHighlightProviderController;
+import org.moflon.gt.ide.ui.highlighting.AbstractHighlightProviderController;
 
 
 
