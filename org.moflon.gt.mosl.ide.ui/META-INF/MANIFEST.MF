@@ -23,8 +23,8 @@ Require-Bundle: org.moflon.ide.ui,
  org.eclipse.emf.codegen.ecore,
  org.moflon.sdm.compiler.eclipse
 Bundle-ActivationPolicy: lazy
-Export-Package: org.moflon.gt.ide.ui.highlighting,
- org.moflon.gt.ide.ui.highlighting.exceptions,
- org.moflon.gt.ide.ui.highlighting.rules,
- org.moflon.gt.ide.ui.highlighting.utils,
- org.moflon.gt.ide.ui.wizards
+Export-Package: org.moflon.gt.mosl.ide.ui.highlighting,
+ org.moflon.gt.mosl.ide.ui.highlighting.exceptions,
+ org.moflon.gt.mosl.ide.ui.highlighting.rules,
+ org.moflon.gt.mosl.ide.ui.highlighting.utils,
+ org.moflon.gt.mosl.ide.ui.wizards
