@@ -11,9 +11,15 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.moflon.gt.mosl.ide.core.ui.highlighting.rules.AbstractHighlightingRule;
 
-public abstract class DefaultMOSLSemanticHighlightCalculator extends DefaultSemanticHighlightingCalculator {
+
+
+public abstract class AbstractSemanticHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
    
-   protected abstract MOSLHighlightProviderController getController();
+	private static AbstractHighlightProviderController controller;
+	
+	static void setController (AbstractHighlightProviderController _controller) {
+		controller = _controller;
+	}
    
 	@Override
 	protected void doProvideHighlightingFor(XtextResource resource, IHighlightedPositionAcceptor acceptor,
@@ -22,7 +28,7 @@ public abstract class DefaultMOSLSemanticHighlightCalculator extends DefaultSema
 		if (resource == null || resource.getParseResult() == null)
 			return;
 		INode rootNode = resource.getParseResult().getRootNode();
-		Collection<AbstractHighlightingRule> rules = getController().getHighlightRules();
+		Collection<AbstractHighlightingRule> rules = controller.getHighlightRules();
 		for (INode node : rootNode.getLeafNodes()) {
 			findHighlightingRuleForNode(node, rules, acceptor);
 		}

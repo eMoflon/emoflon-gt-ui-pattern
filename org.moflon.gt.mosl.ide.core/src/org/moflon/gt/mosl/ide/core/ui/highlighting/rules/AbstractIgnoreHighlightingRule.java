@@ -4,11 +4,17 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfigurationAcceptor;
 import org.eclipse.xtext.ui.editor.utils.TextStyle;
+import org.moflon.gt.mosl.ide.core.ui.highlighting.AbstractHighlightProviderController;
+
+
 
 public abstract class AbstractIgnoreHighlightingRule extends AbstractHighlightingRule {
 
-	public AbstractIgnoreHighlightingRule(String id, String description) {
-		super(id, description, Integer.MAX_VALUE);
+
+
+	public AbstractIgnoreHighlightingRule(String id, String description,
+			AbstractHighlightProviderController controller) {
+		super(id, description, controller, Integer.MAX_VALUE);
 	}
 
 	@Override

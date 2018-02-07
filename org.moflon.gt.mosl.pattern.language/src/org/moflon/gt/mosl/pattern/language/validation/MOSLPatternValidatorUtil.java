@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.moflon.core.utilities.WorkspaceHelper;
 import org.moflon.gt.mosl.ide.core.scoping.utils.MOSLScopeUtil;
-import org.moflon.gt.mosl.ide.core.utils.MOSLUtil;
+import org.moflon.gt.mosl.ide.core.utils.XtextUtil;
 import org.moflon.gt.mosl.pattern.language.exceptions.LibFileDoesnotExitException;
 import org.moflon.gt.mosl.pattern.language.exceptions.LibFolderDoesnNotExistException;
 import org.moflon.gt.mosl.pattern.language.exceptions.PatternLanguageException;
@@ -61,7 +61,7 @@ public class MOSLPatternValidatorUtil
 
    private EDataType getEDataTypeByName(String typeName)
    {
-      return MOSLUtil.getInstance().getEcoreEDataTypes().parallelStream().filter(type -> type.getName().equals(typeName)).findFirst().get();
+      return XtextUtil.getInstance().getEcoreEDataTypes().parallelStream().filter(type -> type.getName().equals(typeName)).findFirst().get();
    }
 
    private String getProjectNameFromURI(URI uri)

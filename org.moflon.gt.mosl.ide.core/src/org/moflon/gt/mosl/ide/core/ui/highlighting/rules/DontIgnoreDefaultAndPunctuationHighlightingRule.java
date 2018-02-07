@@ -3,13 +3,17 @@ package org.moflon.gt.mosl.ide.core.ui.highlighting.rules;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.nodemodel.INode;
-import org.moflon.gt.mosl.ide.core.ui.highlighting.MOSLHighlightingConfiguration;
-import org.moflon.gt.mosl.ide.core.ui.highlighting.MOSLTokenMapper;
+import org.moflon.gt.mosl.ide.core.ui.highlighting.AbstractHighlightProviderController;
+import org.moflon.gt.mosl.ide.core.ui.highlighting.AbstractHighlightingConfiguration;
+import org.moflon.gt.mosl.ide.core.ui.highlighting.AbstractTokenMapper;
+
+
 
 public class DontIgnoreDefaultAndPunctuationHighlightingRule extends AbstractIgnoreHighlightingRule {
 
-	public DontIgnoreDefaultAndPunctuationHighlightingRule() {
-		super("DontIgnoreDefault", "An Ignore Highlighting Rule");
+public DontIgnoreDefaultAndPunctuationHighlightingRule(AbstractHighlightProviderController controller) {
+		super("DontIgnoreDefault", "An Ignore Highlighting Rule", controller);
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -21,8 +25,8 @@ public class DontIgnoreDefaultAndPunctuationHighlightingRule extends AbstractIgn
 	}
 
 	private boolean isDefaultOrPunctuation(Keyword keyword){
-		String id = MOSLTokenMapper.getIDFromToken(keyword.getValue());
-		return id !=null && (id.equals(MOSLHighlightingConfiguration.DEFAULT_ID) || id.equals(MOSLHighlightingConfiguration.PUNCTUATION_ID));
+		String id = AbstractTokenMapper.getIDFromToken(keyword.getValue());
+		return id !=null && (id.equals(AbstractHighlightingConfiguration.DEFAULT_ID) || id.equals(AbstractHighlightingConfiguration.PUNCTUATION_ID));
 	}
 
 
