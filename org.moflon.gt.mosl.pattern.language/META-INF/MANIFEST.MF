@@ -14,9 +14,9 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.util,
  org.eclipse.xtend.lib,
  org.eclipse.emf.common,
- org.moflon.core.utilities;bundle-version="3.0.0",
+ org.moflon.core.utilities,
  org.moflon.sdm.compiler.eclipse,
- org.moflon.ide.mosl.core,
+ org.moflon.gt.mosl.ide.core,
  org.moflon.sdm.constraints.operationspecification,
  org.moflon.sdm.constraints.constraintstodemocles
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
@@ -31,6 +31,7 @@ Export-Package: org.moflon.gt.mosl.pattern.language,
  org.moflon.gt.mosl.pattern.language.serializer,
  org.moflon.gt.mosl.pattern.language.services,
  org.moflon.gt.mosl.pattern.language.utils,
- org.moflon.gt.mosl.pattern.language.validation
+ org.moflon.gt.mosl.pattern.language.validation,
+ org.moflon.gt.mosl.pattern.language.formatting2
 Import-Package: org.apache.log4j,
  org.eclipse.core.resources

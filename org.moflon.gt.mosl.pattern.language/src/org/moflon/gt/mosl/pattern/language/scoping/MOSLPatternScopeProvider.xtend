@@ -6,28 +6,29 @@ package org.moflon.gt.mosl.pattern.language.scoping
 import java.util.List
 import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EClassifier
 import org.eclipse.emf.ecore.EDataType
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.scoping.Scopes
-import org.moflon.core.utilities.eMoflonEMFUtil
+import org.moflon.codegen.eclipse.CodeGeneratorPlugin
+import org.moflon.gt.mosl.ide.core.exceptions.CannotFindScopeException
+import org.moflon.gt.mosl.ide.core.scoping.ScopeProviderHelper
+import org.moflon.gt.mosl.ide.core.scoping.utils.MOSLScopeUtil
+import org.moflon.gt.mosl.ide.core.utils.MOSLUtil
 import org.moflon.gt.mosl.pattern.language.moslPattern.AbstractAttribute
 import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeContainer
 import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeExpression
 import org.moflon.gt.mosl.pattern.language.moslPattern.Constraint
 import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
-import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDefParameter
+import org.moflon.gt.mosl.pattern.language.moslPattern.EDatatypeContainer
 import org.moflon.gt.mosl.pattern.language.moslPattern.GraphTransformationPatternFile
 import org.moflon.gt.mosl.pattern.language.moslPattern.LinkVariablePattern
 import org.moflon.gt.mosl.pattern.language.moslPattern.ObjectVariablePattern
 import org.moflon.gt.mosl.pattern.language.moslPattern.PatternModule
 import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidatorUtil
-import org.moflon.ide.mosl.core.exceptions.CannotFindScopeException
-import org.moflon.ide.mosl.core.scoping.ScopeProviderHelper
-import org.moflon.ide.mosl.core.scoping.utils.MOSLScopeUtil
-import org.moflon.ide.mosl.core.utils.MOSLUtil
 
 /**
  * This class contains custom scoping description.
@@ -65,7 +66,7 @@ class MOSLPatternScopeProvider extends AbstractMOSLPatternScopeProvider {
 
 
 	def searchForEDatatype(EObject context, EReference reference) {
-		return context instanceof ConstraintDefParameter && reference.name.equals("type")
+		return context instanceof EDatatypeContainer && reference.name.equals("eType")
 	}
 
 	def boolean searchForEReferences(EObject context, EReference reference) {
@@ -89,7 +90,7 @@ class MOSLPatternScopeProvider extends AbstractMOSLPatternScopeProvider {
 
 	def <T extends EObject> getScopeByType(EObject context, Class<T> type, List<T> currentFound) throws CannotFindScopeException{
 		val set = scopeHelper.resourceSet
-		eMoflonEMFUtil.createPluginToResourceMapping(set);
+		CodeGeneratorPlugin.createPluginToResourceMapping(set);
 		var gtf = getGraphTransformationFile(context)
 		var uris = gtf.imports.map[importValue | URI.createURI(importValue.name)];
 		return scopeHelper.createScope(uris, EPackage, type, currentFound)
@@ -97,7 +98,7 @@ class MOSLPatternScopeProvider extends AbstractMOSLPatternScopeProvider {
 
 	def getScopeForEAttributes(AttributeContainer attributeExpression){
 		val objectVariable = getObjectVariable(attributeExpression)
-		val eClass = objectVariable.type
+		val eClass = objectVariable.EType as EClass
 		Scopes.scopeFor(eClass.EAllAttributes)
 	}
 
@@ -114,7 +115,7 @@ class MOSLPatternScopeProvider extends AbstractMOSLPatternScopeProvider {
 	}
 
 	def boolean searchForEClassifier(EObject context, EReference reference){
-		return context instanceof ObjectVariablePattern  && reference.name.equals("type")
+		return context instanceof ObjectVariablePattern  && reference.name.equals("eType")
 	}
 
 	def boolean searchForEAttribute(EObject context, EReference reference){

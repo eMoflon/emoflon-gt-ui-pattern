@@ -12,6 +12,13 @@ GraphTransformationPatternFile:
 	modules += PatternModule*
 ;
 
+ETypedElement returns ecore::ETypedElement: ObjectVariablePattern | TemporaryVariable;
+
+EParameter returns ecore::EParameter: ConstraintDefParameter;
+
+
+
+
 PatternModule:'module' name = ID '{'
 		definitions += Definition*
 	'}'
@@ -21,7 +28,7 @@ Definition:ConstraintDef | PatternDef;
 
 ConstraintDef: (isPublic?='public')? 'defineConstraint' name = ID '(' (parameters += ConstraintDefParameter) (',' parameters += ConstraintDefParameter)* ')';
 
-ConstraintDefParameter:name = ID ':' type = [ecore::EDataType | QualifiedName];
+ConstraintDefParameter:name = ID ':' eType = [ecore::EDataType | QualifiedName];
 
 PatternDef:'pattern' name=ID '(' (parameters += PatternParameter)? (',' parameters += PatternParameter)* ')' '{'	
 	variables += NACAndObjectVariable*
@@ -30,16 +37,20 @@ PatternDef:'pattern' name=ID '(' (parameters += PatternParameter)? (',' paramete
 ;
 
 ComplexAttributeConstraints:{ComplexAttributeConstraints} 'attributeConstraints' '{' 
-	constraints += Constraint*
+	variables += CACVariable*
 '}';
+
+CACVariable:TemporaryVariable | Constraint;
+
+TemporaryVariable:	name = ID ':' eType = [ecore::EDataType];
 
 Constraint: name = [ConstraintDef] '(' args += ConstraintArgument? (',' args += ConstraintArgument)*')';
 
-ConstraintArgument: AttributeExpression | LiteralExpression | EnumExpression;
+ConstraintArgument: AttributeExpression | LiteralExpression | EnumExpression | TemporaryVariableExpression;
 
 NACAndObjectVariable:NACGroup | ObjectVariablePattern;
 
-ObjectVariablePattern:(op = Operator)? name = ID ':' type = [ecore::EClass | QualifiedName] (':=' assignment=[ObjectVariablePattern | QualifiedName])? ('{' 
+ObjectVariablePattern:(op = Operator)? name = ID ':' eType = [ecore::EClass | QualifiedName] (':=' assignment=[ObjectVariablePattern | QualifiedName])? ('{' 
 		attributeAssignments += AttributeAssignment*
 		attributeConstraints += AttributeConstraint*
 		linkVariablePatterns += LinkVariablePattern*	
@@ -70,7 +81,7 @@ EnumExpression:
 ;
 
 AttributeExpression:
-	objectVar = [ObjectVariablePattern] '.' name = [ecore::EAttribute]
+	objectVar = [ObjectVariablePattern] '.' name = [ecore::EAttribute] (free ?= "'")?
 ;
 
 LiteralExpression:
@@ -91,6 +102,10 @@ StringLiteralExpression:
 
 BooleanLiteralExpression:
 	value = BooleanLiteralValue
+;
+
+TemporaryVariableExpression:
+	value = [TemporaryVariable]
 ;
 
 LinkVariablePattern:
@@ -132,6 +147,9 @@ terminal BOOL:
 	'true' | 'false'
 ;
 
+@Override 
+terminal STRING:'"' ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|'"') )* '"';
+
 QualifiedNameWithWildcard:
 	QualifiedName '.*'
 ;
@@ -150,6 +168,8 @@ AttributeContainer:AbstractAttribute | AttributeExpression;
 PatternObject: PatternVariable | Expression;
 
 PatternVariable:NACAndObjectVariable | LinkVariablePattern;
+
+EDatatypeContainer:(TemporaryVariable | ConstraintDefParameter);
 
 //ObjectVariableDefinition: ;
 

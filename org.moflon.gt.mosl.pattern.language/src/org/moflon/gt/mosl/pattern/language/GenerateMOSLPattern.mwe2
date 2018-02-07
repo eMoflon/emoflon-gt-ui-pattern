@@ -27,12 +27,18 @@ Workflow {
 		}
 		language = StandardLanguage {
 			name = "org.moflon.gt.mosl.pattern.language.MOSLPattern"
-			//referencedResource = "platform:/plugin/org.moflon.sdm.constraints.operationspecification/model/Operationspecification.genmodel"
+			referencedResource = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel"
 			fileExtensions = "mpt"
 
 			serializer = {
 				generateStub = false
 			}
+			
+			formatter = {
+				generateStub = true
+				generateXtendStub = true
+			}	
+			
 			validator = {
 				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
 			}
