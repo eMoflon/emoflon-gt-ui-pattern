@@ -2,7 +2,6 @@ package org.moflon.gt.mosl.pattern.language.ui.highlighting.rules;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.impl.LeafNode;
 import org.moflon.gt.mosl.ide.ui.highlighting.AbstractHighlightProviderController;
 import org.moflon.gt.mosl.ide.ui.highlighting.rules.AbstractHighlightingRule;
 import org.moflon.gt.mosl.pattern.language.moslPattern.LinkVariablePattern;
@@ -14,8 +13,8 @@ public abstract class AbstractOperatorHighlightingRule extends AbstractHighlight
 
 
 
-	public AbstractOperatorHighlightingRule(String id, String description,	AbstractHighlightProviderController controller) {
-		super(id, description, controller);
+	public AbstractOperatorHighlightingRule(AbstractHighlightProviderController controller) {
+		super(controller);
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public abstract class AbstractOperatorHighlightingRule extends AbstractHighlight
 					return text.equals("-") || text.equals("->") || text.equals(linkVariablePattern.getReference().getName());
 				}else {
 					ObjectVariablePattern objectVariablePattern = ObjectVariablePattern.class.cast(moslObject);
-					return text.equals("{") || text.equals("}") || text.equals(":") || objectVariablePattern.getName().equals(text) || objectVariablePattern.getEType().getName().equals(text);
+					return text.equals("{") || text.equals("}") || text.equals(":") || (!objectVariablePattern.getName().equals("this") && objectVariablePattern.getName().equals(text)) || objectVariablePattern.getEType().getName().equals(text);
 				}
 			}
 		}

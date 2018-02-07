@@ -12,8 +12,7 @@ import org.moflon.gt.mosl.ide.ui.highlighting.AbstractTokenMapper;
 public class DontIgnoreDefaultAndPunctuationHighlightingRule extends AbstractIgnoreHighlightingRule {
 
 public DontIgnoreDefaultAndPunctuationHighlightingRule(AbstractHighlightProviderController controller) {
-		super("DontIgnoreDefault", "An Ignore Highlighting Rule", controller);
-		// TODO Auto-generated constructor stub
+		super(controller);
 	}
 
 	@Override
@@ -27,6 +26,16 @@ public DontIgnoreDefaultAndPunctuationHighlightingRule(AbstractHighlightProvider
 	private boolean isDefaultOrPunctuation(Keyword keyword){
 		String id = AbstractTokenMapper.getIDFromToken(keyword.getValue());
 		return id !=null && (id.equals(AbstractHighlightingConfiguration.DEFAULT_ID) || id.equals(AbstractHighlightingConfiguration.PUNCTUATION_ID));
+	}
+
+	@Override
+	protected String id() {
+		return "DontIgnoreDefault";
+	}
+
+	@Override
+	protected String description() {
+		return "An Ignore Highlighting Rule";
 	}
 
 

@@ -16,27 +16,26 @@ public abstract class AbstractHighlightingRule implements IModularConfiguration{
 
 	protected Logger logger;
 	
-	protected String id;
+	private String id;
 	
-	protected String description;
+	private String description;
 	
 	protected AbstractHighlightProviderController controller;
 	
 	private int prio=50;
 	
-	public AbstractHighlightingRule(String id, String description, AbstractHighlightProviderController controller){
-		init(id, description, controller);
+	public AbstractHighlightingRule(AbstractHighlightProviderController controller){
+		init(controller);
 	}
 	
-	public AbstractHighlightingRule(String id, String description, AbstractHighlightProviderController controller, int prio){
+	protected void setPrio(int prio) {
 		this.prio = prio;
-		init(id, description, controller);
 	}
 	
-	private void init(String id, String description, AbstractHighlightProviderController controller){
+	private void init(AbstractHighlightProviderController controller){
 		logger = Logger.getLogger(this.getClass());
-		this.id = id;
-		this.description = description;
+		this.id = id();
+		this.description = description();
 		this.controller = controller;
 		try {
 			this.controller.addHighlightRule(this);
@@ -44,6 +43,10 @@ public abstract class AbstractHighlightingRule implements IModularConfiguration{
 			logger.error("ID already exist", e);
 		}
 	}
+	
+	protected abstract String id();
+	
+	protected abstract String description();
 	
 	protected void setHighlighting(INode node, IHighlightedPositionAcceptor acceptor){
 		acceptor.addPosition(node.getOffset(), node.getLength() , id);

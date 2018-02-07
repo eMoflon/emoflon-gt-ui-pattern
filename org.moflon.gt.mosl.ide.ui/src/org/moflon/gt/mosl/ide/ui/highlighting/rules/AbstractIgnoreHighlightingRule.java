@@ -12,9 +12,9 @@ public abstract class AbstractIgnoreHighlightingRule extends AbstractHighlightin
 
 
 
-	public AbstractIgnoreHighlightingRule(String id, String description,
-			AbstractHighlightProviderController controller) {
-		super(id, description, controller, Integer.MAX_VALUE);
+	public AbstractIgnoreHighlightingRule(AbstractHighlightProviderController controller) {
+		super(controller);
+		setPrio(Integer.MAX_VALUE);
 	}
 
 	@Override
