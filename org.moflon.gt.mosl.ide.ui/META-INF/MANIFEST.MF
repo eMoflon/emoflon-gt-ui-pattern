@@ -21,6 +21,7 @@ Require-Bundle: org.moflon.ide.ui,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.xtext.wizard,
  org.eclipse.emf.codegen.ecore,
- org.moflon.sdm.compiler.eclipse
+ org.moflon.sdm.compiler.eclipse,
+ org.moflon.core.ui;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.moflon.gt.ide.ui.wizards
