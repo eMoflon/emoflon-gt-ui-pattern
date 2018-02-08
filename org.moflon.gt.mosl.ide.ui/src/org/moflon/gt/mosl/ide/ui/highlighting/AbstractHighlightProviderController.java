@@ -27,9 +27,9 @@ public abstract class AbstractHighlightProviderController {
 	
 	private List<AbstractHighlightingRule> rules = new ArrayList<>(); 
 	private Set<String> ruleNames = new HashSet<>();
-	private final AbstractSemanticHighlightingCalculator semanticCalculator;
-	private XtextColorManager colorManager;
 	private AbstractHighlightingConfiguration config;
+	private AbstractSemanticHighlightingCalculator semanticCalculator;
+	private XtextColorManager colorManager;
 	private Class<? extends AbstractTokenMapper> tokenMapperClass;
 	private static Logger logger = Logger.getLogger(AbstractHighlightProviderController.class);
 	
@@ -52,17 +52,37 @@ public abstract class AbstractHighlightProviderController {
 	}
 	
 	private AbstractHighlightProviderController(HighlightAutoFactory rulesFactory, Class<? extends AbstractTokenMapper> tokenClass) {
+	   AbstractHighlightingConfiguration.setController(getConfigClass(), this);
 	   init(rulesFactory);
-	   this.config = createConfig();
-	   this.colorManager = config.getColorManager();
-	   semanticCalculator = this.createtSemanticHighlightingCalculator();
-	   AbstractSemanticHighlightingCalculator.setController(this);
+	   AbstractSemanticHighlightingCalculator.registerController(getCalculatorClass(), this);
 	   this.tokenMapperClass = tokenClass;
 	}
 	
-	protected abstract AbstractHighlightingConfiguration createConfig();
+	protected abstract Class<? extends AbstractHighlightingConfiguration> getConfigClass();
 	
-	protected abstract AbstractSemanticHighlightingCalculator createtSemanticHighlightingCalculator();
+	protected abstract Class<? extends AbstractSemanticHighlightingCalculator> getCalculatorClass();
+	
+	void setColorManager (XtextColorManager colorManager) {
+		this.colorManager =colorManager;
+	}
+	
+	void setConfig(AbstractHighlightingConfiguration config) {
+		this.config=config;
+	}
+	
+	public AbstractHighlightingConfiguration getConfig() {
+		if(config != null)
+			return config;
+		else
+			try {
+				return getConfigClass().newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				logger.error(e.getMessage(), e);
+				return null;
+			}
+	}
+	
+	
 	
 	public void init(HighlightAutoFactory rulesFactory){
 		rules.clear();
@@ -77,7 +97,6 @@ public abstract class AbstractHighlightProviderController {
 		else{
 			rules.add(rule);
 			ruleNames.add(rule.getID());
-			AbstractHighlightingConfiguration.addModularConfig(rule);
 		}
 	}
 	
@@ -85,18 +104,14 @@ public abstract class AbstractHighlightProviderController {
 	   return this.colorManager;
 	}
 	
-	public AbstractSemanticHighlightingCalculator getSemanticCalculator() {
-		return this.semanticCalculator;
-	}
-	
-	public AbstractHighlightingConfiguration getConfig(){
-	   return this.config;
+	void setSematicCalculator(AbstractSemanticHighlightingCalculator semanticHighlightingCalculator){
+		this.semanticCalculator = semanticHighlightingCalculator;
 	}
 	
 	public void bind(Binder binder) {
-		bindSemanticCalculator(binder, semanticCalculator.getClass());
+		bindSemanticCalculator(binder, getCalculatorClass());
 		bindTokenMapper(binder, tokenMapperClass);
-		binder.bind(IHighlightingConfiguration.class).to(config.getClass());
+		binder.bind(IHighlightingConfiguration.class).to(getConfigClass());
    }
 	
 	private void bindSemanticCalculator(Binder binder, Class<? extends AbstractSemanticHighlightingCalculator> clazz) {

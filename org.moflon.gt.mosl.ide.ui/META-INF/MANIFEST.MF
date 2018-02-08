@@ -21,7 +21,8 @@ Require-Bundle: org.moflon.ide.ui,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.xtext.wizard,
  org.eclipse.emf.codegen.ecore,
- org.moflon.sdm.compiler.eclipse
+ org.moflon.sdm.compiler.eclipse,
+ org.moflon.gt.mosl.ide.core
 Bundle-ActivationPolicy: lazy
 Export-Package: org.moflon.gt.mosl.ide.ui.highlighting,
  org.moflon.gt.mosl.ide.ui.highlighting.exceptions,

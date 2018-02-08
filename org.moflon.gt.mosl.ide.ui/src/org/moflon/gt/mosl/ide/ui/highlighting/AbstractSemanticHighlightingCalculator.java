@@ -1,7 +1,9 @@
 package org.moflon.gt.mosl.ide.ui.highlighting;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
@@ -17,10 +19,35 @@ import org.moflon.gt.mosl.ide.ui.highlighting.rules.AbstractHighlightingRule;
 
 public abstract class AbstractSemanticHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
    
-	private static AbstractHighlightProviderController controller;
+	private AbstractHighlightProviderController controller;
+	private static Map<Class<? extends AbstractSemanticHighlightingCalculator>, AbstractHighlightProviderController> staticContollers = new HashMap<>();
+	private static Map<Class<? extends AbstractSemanticHighlightingCalculator>, AbstractSemanticHighlightingCalculator> instanceMap = new HashMap<>();
 	
-	static void setController (AbstractHighlightProviderController _controller) {
-		controller = _controller;
+	public AbstractSemanticHighlightingCalculator() {
+		controller = staticContollers.get(this.getClass());
+		if(controller == null) {
+			staticContollers.put(getClass(), null);
+		}
+		else {
+			controller.setSematicCalculator(this);
+		}
+		addInstance();
+	}
+	
+	private void addInstance() {
+		instanceMap.put(getClass(), this);
+	}
+	
+	static void registerController (Class<? extends AbstractSemanticHighlightingCalculator> clazz, AbstractHighlightProviderController controller) {
+		if(staticContollers.containsKey(clazz)) {
+			AbstractHighlightProviderController otherController = staticContollers.get(clazz);
+			if(controller.equals(otherController))
+				return;
+			else {
+				instanceMap.get(clazz).controller = controller;
+			}
+		}
+		staticContollers.put(clazz, controller);
 	}
    
 	@Override
