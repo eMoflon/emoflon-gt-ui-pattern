@@ -1,12 +1,16 @@
 package org.moflon.gt.mosl.ide.ui.highlighting;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.DefaultSemanticHighlightingCalculator;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
@@ -27,8 +31,27 @@ public abstract class AbstractHighlightProviderController {
 	private XtextColorManager colorManager;
 	private AbstractHighlightingConfiguration config;
 	private Class<? extends AbstractTokenMapper> tokenMapperClass;
+	private static Logger logger = Logger.getLogger(AbstractHighlightProviderController.class);
 	
-	public AbstractHighlightProviderController(AbstractHighlightFactory rulesFactory, Class<? extends AbstractTokenMapper> tokenClass) {
+	public AbstractHighlightProviderController(Class<? extends HighlightAutoFactory> factoryClass ,Class<? extends AbstractTokenMapper> tokenClass) {
+		this(createInstance(factoryClass), tokenClass);
+	}
+	
+	public AbstractHighlightProviderController(Class<? extends AbstractTokenMapper> tokenClass) {
+		this(new HighlightAutoFactory(), tokenClass);
+	}
+	
+	private static HighlightAutoFactory createInstance(Class<? extends HighlightAutoFactory> factoryClass) {
+		Constructor<?> factoryConstructor = Arrays.asList(factoryClass.getConstructors()).parallelStream().filter(constructor -> constructor.getParameterCount() == 0).findAny().orElse(null);
+		try {
+			return HighlightAutoFactory.class.cast(factoryConstructor.newInstance());
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException	| InvocationTargetException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return null;
+	}
+	
+	private AbstractHighlightProviderController(HighlightAutoFactory rulesFactory, Class<? extends AbstractTokenMapper> tokenClass) {
 	   init(rulesFactory);
 	   this.config = createConfig();
 	   this.colorManager = config.getColorManager();
@@ -41,12 +64,11 @@ public abstract class AbstractHighlightProviderController {
 	
 	protected abstract AbstractSemanticHighlightingCalculator createtSemanticHighlightingCalculator();
 	
-	public void init(AbstractHighlightFactory rulesFactory){
+	public void init(HighlightAutoFactory rulesFactory){
 		rules.clear();
 		ruleNames.clear();
 		rulesFactory.setController(this);
 		rulesFactory.createAllInstances();
-		rules.sort(getComparator());
 	}
 	
 	public void addHighlightRule(AbstractHighlightingRule rule) throws IDAlreadyExistException{
@@ -89,7 +111,7 @@ public abstract class AbstractHighlightProviderController {
 		return rules;
 	}
 	
-	private  Comparator<? super AbstractHighlightingRule> getComparator(){
+	Comparator<? super AbstractHighlightingRule> getComparator(){
 		return new Comparator<AbstractHighlightingRule>() {
 			@Override
 			public int compare(AbstractHighlightingRule rule1, AbstractHighlightingRule rule2) {

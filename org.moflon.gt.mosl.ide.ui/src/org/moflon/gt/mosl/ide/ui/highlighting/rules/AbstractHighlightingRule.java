@@ -48,7 +48,7 @@ public abstract class AbstractHighlightingRule implements IModularConfiguration{
 	
 	protected abstract String description();
 	
-	protected void setHighlighting(INode node, IHighlightedPositionAcceptor acceptor){
+	public void setHighlighting(INode node, IHighlightedPositionAcceptor acceptor){
 		acceptor.addPosition(node.getOffset(), node.getLength() , id);
 	}
 	
@@ -59,14 +59,10 @@ public abstract class AbstractHighlightingRule implements IModularConfiguration{
 		acceptDefaultHighlighting(id, description, getTextStyle());
 	}
 	
-	public boolean canProvideHighlighting(EObject moslObject, INode node, IHighlightedPositionAcceptor acceptor){
+	public boolean canProvideHighlighting(EObject moslObject, INode node){
 		if(!moslObject.eIsProxy())
 			EcoreUtil.resolveAll(moslObject);
-		boolean provide = getHighlightingConditions(moslObject, node);
-		if(provide){
-			setHighlighting(node, acceptor);
-		}
-		return provide;
+		return getHighlightingConditions(moslObject, node);
 	}
 	
 	public int getPriority(){

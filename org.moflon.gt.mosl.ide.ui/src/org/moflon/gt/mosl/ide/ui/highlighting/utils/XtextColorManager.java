@@ -25,7 +25,7 @@ public class XtextColorManager
       case BLUE:
          return new RGB(0,0,255);
       case BROWN:
-         return new RGB(205, 133, 63);
+         return new RGB(106, 62, 62);
       case DARK_BLUE:
          return new RGB(0,0,128);
       case DARK_RED:

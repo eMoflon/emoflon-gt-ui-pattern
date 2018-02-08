@@ -7,7 +7,7 @@ import org.moflon.gt.mosl.ide.ui.highlighting.AbstractSemanticHighlightingCalcul
 public class MOSLPatternHighlightProviderController extends AbstractHighlightProviderController {
 
 	public MOSLPatternHighlightProviderController() {
-		super(new MOSLPatternHighlightingFactory(), MOSLPatternTokenMapper.class);
+		super(MOSLPatternTokenMapper.class);
 	}
 
 	@Override

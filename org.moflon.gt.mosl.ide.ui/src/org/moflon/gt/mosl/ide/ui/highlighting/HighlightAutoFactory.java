@@ -3,6 +3,7 @@ package org.moflon.gt.mosl.ide.ui.highlighting;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,27 +15,33 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.wiring.BundleWiring;
 
-public abstract class AbstractHighlightFactory {
+public class HighlightAutoFactory {
 	protected AbstractHighlightProviderController controller;
 	
 	protected Logger logger;
 	
-	public AbstractHighlightFactory() {
+	public HighlightAutoFactory() {
 		logger = Logger.getLogger(this.getClass());
 	}
 	
 	public void createAllInstances() {
-		String pluginName = WorkspaceHelper.getPluginId(this.getClass());
-		Bundle bundle = FrameworkUtil.getBundle(getClass());
+		String pluginName = WorkspaceHelper.getPluginId(controller.getClass());
+		Bundle bundle = FrameworkUtil.getBundle(controller.getClass());
 		BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
 		Collection<String> resources = bundleWiring.listResources(pluginName.replaceAll("\\.", "/"), "*.class", BundleWiring.LISTRESOURCES_RECURSE);
 		List<String> classNames = resources.parallelStream().map(resource -> resource.replaceAll("/", "\\.").replace(".class", "")).collect(Collectors.toList());
-		List<Class<?>> classes = classNames.parallelStream().map(this::loadClass).collect(Collectors.toList());
-		createInstances(classes.parallelStream().filter(this::isExecutableAndRegisteredRule).collect(Collectors.toList()));
+		List<Class<?>> classes = classNames.parallelStream().map(className -> loadClass(className, bundle)).collect(Collectors.toList());
+		List<Class<?>> ruleClasses = classes.parallelStream().filter(this::isExecutableAndRegisteredRule).collect(Collectors.toList());
+		ruleClasses.addAll(manuallyLoadedClasses().parallelStream().filter(this::isConcreteHighlightingRule).map(classRule -> (Class<?>) classRule).collect(Collectors.toList()));
+		createInstances(ruleClasses);
 	}
 	
 	private boolean isExecutableAndRegisteredRule(Class<?> ruleClass) {
-		return ruleClass != null && AbstractHighlightingRule.class.isAssignableFrom(ruleClass) && !Modifier.isAbstract(ruleClass.getModifiers()) && ruleClass.isAnnotationPresent(RegisterRule.class) && hasCorrectConstructor(ruleClass);
+		return isConcreteHighlightingRule(ruleClass) && ruleClass.isAnnotationPresent(RegisterRule.class);
+	}
+	
+	private boolean isConcreteHighlightingRule(Class<?> ruleClass) {
+		return ruleClass != null && AbstractHighlightingRule.class.isAssignableFrom(ruleClass) && !Modifier.isAbstract(ruleClass.getModifiers()) && hasCorrectConstructor(ruleClass);
 	}
 	
 	private void createInstances(List<Class<?>> classes) {
@@ -72,9 +79,13 @@ public abstract class AbstractHighlightFactory {
 		this.controller = controller;
 	}
 	
-	private Class<?> loadClass(String className){
+	protected List<Class<? extends AbstractHighlightingRule>> manuallyLoadedClasses(){		
+		return new ArrayList<>();
+	}
+	
+	private Class<?> loadClass(String className, Bundle bundle){
 		try {
-			return this.getClass().getClassLoader().loadClass(className);
+			return bundle.loadClass(className);
 		} catch (ClassNotFoundException e) {
 			logger.error(e.getMessage(), e);
 			return null;

@@ -19,6 +19,7 @@ import org.moflon.gt.mosl.ide.core.utils.ResourceUtil;
 
 
 
+
 public class ScopeProviderHelper <E extends EObject> {
 	private Map<URI, E> existingScopingRoots;
 	private Map<String, List<EObject>> oldCandidates;

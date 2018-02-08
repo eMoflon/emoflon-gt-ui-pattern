@@ -1,6 +1,8 @@
 package org.moflon.gt.mosl.ide.ui.highlighting;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.DefaultSemanticHighlightingCalculator;
@@ -38,9 +40,10 @@ public abstract class AbstractSemanticHighlightingCalculator extends DefaultSema
 	
 	private void findHighlightingRuleForNode(INode node, Collection<AbstractHighlightingRule> rules, IHighlightedPositionAcceptor acceptor){
 		EObject moslObject = NodeModelUtils.findActualSemanticObjectFor(node);
-		for (AbstractHighlightingRule rule : rules){
-			if(rule.canProvideHighlighting(moslObject, node, acceptor))
-				return;
+		List<AbstractHighlightingRule> candidates = rules.parallelStream().filter(rule -> rule.canProvideHighlighting(moslObject, node)).collect(Collectors.toList());
+		AbstractHighlightingRule rule = candidates.stream().sorted(controller.getComparator()).findFirst().orElse(null);
+		if(rule != null) {
+			rule.setHighlighting(node, acceptor);
 		}
 	}
 }
