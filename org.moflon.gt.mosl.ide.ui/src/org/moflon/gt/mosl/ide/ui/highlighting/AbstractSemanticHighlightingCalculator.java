@@ -1,11 +1,9 @@
 package org.moflon.gt.mosl.ide.ui.highlighting;
 
-import java.util.Collection;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.DefaultSemanticHighlightingCalculator;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.IHighlightedPositionAcceptor;
@@ -27,9 +25,6 @@ public abstract class AbstractSemanticHighlightingCalculator extends DefaultSema
 		controller = staticContollers.get(this.getClass());
 		if(controller == null) {
 			staticContollers.put(getClass(), null);
-		}
-		else {
-			controller.setSematicCalculator(this);
 		}
 		addInstance();
 	}
@@ -57,7 +52,7 @@ public abstract class AbstractSemanticHighlightingCalculator extends DefaultSema
 		if (resource == null || resource.getParseResult() == null)
 			return;
 		INode rootNode = resource.getParseResult().getRootNode();
-		Collection<AbstractHighlightingRule> rules = controller.getHighlightRules();
+		List<AbstractHighlightingRule> rules = controller.getHighlightRules();
 		for (INode node : rootNode.getLeafNodes()) {
 			findHighlightingRuleForNode(node, rules, acceptor);
 		}
@@ -65,12 +60,14 @@ public abstract class AbstractSemanticHighlightingCalculator extends DefaultSema
 
 	}
 	
-	private void findHighlightingRuleForNode(INode node, Collection<AbstractHighlightingRule> rules, IHighlightedPositionAcceptor acceptor){
+	private void findHighlightingRuleForNode(INode node, List<AbstractHighlightingRule> rules, IHighlightedPositionAcceptor acceptor){
 		EObject moslObject = NodeModelUtils.findActualSemanticObjectFor(node);
-		List<AbstractHighlightingRule> candidates = rules.parallelStream().filter(rule -> rule.canProvideHighlighting(moslObject, node)).collect(Collectors.toList());
-		AbstractHighlightingRule rule = candidates.stream().sorted(controller.getComparator()).findFirst().orElse(null);
-		if(rule != null) {
-			rule.setHighlighting(node, acceptor);
+		rules.sort(controller.getComparator());
+		for (AbstractHighlightingRule rule : rules){
+			if(rule.canProvideHighlighting(moslObject, node)) {
+				rule.setHighlighting(node, acceptor);
+				return;
+			}
 		}
 	}
 }

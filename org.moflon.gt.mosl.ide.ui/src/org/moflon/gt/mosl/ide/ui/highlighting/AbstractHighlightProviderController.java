@@ -4,12 +4,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.DefaultSemanticHighlightingCalculator;
@@ -17,18 +15,28 @@ import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.moflon.gt.mosl.ide.ui.highlighting.exceptions.IDAlreadyExistException;
 import org.moflon.gt.mosl.ide.ui.highlighting.rules.AbstractHighlightingRule;
 import org.moflon.gt.mosl.ide.ui.highlighting.utils.XtextColorManager;
-
 import com.google.inject.Binder;
 
-
-
-
+/**
+ * 
+ * @author SaschaEdwinZander
+ * 
+ * This class is the most important class of the highlighting framework. 
+ * It shares the information of all different kinds of Highlighting. It also connects the Highlighting 
+ * It is possible to override the {@link HighlightAutoFactory} by giving the Class of the Subclass to the constructor;  
+ * 
+ * @see AbstractTokenMapper
+ * @see AbstractHighlightingRule
+ * @see AbstractHighlightingConfiguration
+ * @see AbstractSemanticHighlightingCalculator
+ * @see HighlightAutoFactory
+ *
+ */
 public abstract class AbstractHighlightProviderController {
 	
 	private List<AbstractHighlightingRule> rules = new ArrayList<>(); 
 	private Set<String> ruleNames = new HashSet<>();
 	private AbstractHighlightingConfiguration config;
-	private AbstractSemanticHighlightingCalculator semanticCalculator;
 	private XtextColorManager colorManager;
 	private Class<? extends AbstractTokenMapper> tokenMapperClass;
 	private static Logger logger = Logger.getLogger(AbstractHighlightProviderController.class);
@@ -82,8 +90,6 @@ public abstract class AbstractHighlightProviderController {
 			}
 	}
 	
-	
-	
 	public void init(HighlightAutoFactory rulesFactory){
 		rules.clear();
 		ruleNames.clear();
@@ -104,10 +110,6 @@ public abstract class AbstractHighlightProviderController {
 	   return this.colorManager;
 	}
 	
-	void setSematicCalculator(AbstractSemanticHighlightingCalculator semanticHighlightingCalculator){
-		this.semanticCalculator = semanticHighlightingCalculator;
-	}
-	
 	public void bind(Binder binder) {
 		bindSemanticCalculator(binder, getCalculatorClass());
 		bindTokenMapper(binder, tokenMapperClass);
@@ -122,7 +124,7 @@ public abstract class AbstractHighlightProviderController {
 		binder.bind(AbstractAntlrTokenToAttributeIdMapper.class).to(clazz);
 	}
 	
-	public  Collection<AbstractHighlightingRule> getHighlightRules(){
+	public  List<AbstractHighlightingRule> getHighlightRules(){
 		return rules;
 	}
 	

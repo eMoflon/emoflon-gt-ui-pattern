@@ -8,20 +8,48 @@ import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfigurationAcceptor;
 import org.eclipse.xtext.ui.editor.utils.TextStyle;
 import org.moflon.gt.mosl.ide.ui.highlighting.AbstractHighlightProviderController;
+import org.moflon.gt.mosl.ide.ui.highlighting.AbstractHighlightingConfiguration;
+import org.moflon.gt.mosl.ide.ui.highlighting.AbstractSemanticHighlightingCalculator;
+import org.moflon.gt.mosl.ide.ui.highlighting.HighlightAutoFactory;
+import org.moflon.gt.mosl.ide.ui.highlighting.RegisterRule;
 import org.moflon.gt.mosl.ide.ui.highlighting.exceptions.IDAlreadyExistException;
+import org.moflon.gt.mosl.ide.ui.highlighting.utils.XtextColor;
+import org.moflon.gt.mosl.ide.ui.highlighting.utils.XtextColorManager;
 
-
+/**
+ * 
+ * @author SaschaEdwinZander
+ * 
+ * The AbstractHighlightingRule is the basic for semantic TextHighlighting.
+ * To activate and create a HighlightingRule the Annotation {@link RegisterRule} must be set at the Top of a class.
+ * It is not allowed to change the constructor with more arguments, because Reflection is used.
+ * 
+ * @see RegisterRule
+ * @see AbstractSemanticHighlightingCalculator
+ * @see AbstractHighlightingConfiguration
+ * @see HighlightAutoFactory
+ * @see XtextColor
+ * @see XtextColorManager
+ *
+ */
 
 public abstract class AbstractHighlightingRule implements IModularConfiguration{
 
 	protected Logger logger;
 	
+	/**
+	 * The id must be an unique identifier to save in {@link AbstractHighlightingConfiguration}.
+	 * The TextStyle will be identified from the id.
+	 */
 	private String id;
 	
 	private String description;
 	
 	protected AbstractHighlightProviderController controller;
 	
+	/**
+	 * This is the priority. If the priority is higher the the Rule will be handled earlier. 
+	 */
 	private int prio=50;
 	
 	public AbstractHighlightingRule(AbstractHighlightProviderController controller){
@@ -33,7 +61,7 @@ public abstract class AbstractHighlightingRule implements IModularConfiguration{
 	}
 	
 	private void init(AbstractHighlightProviderController controller){
-		logger = Logger.getLogger(this.getClass());
+		logger = Logger.getLogger(controller.getClass().getName() +"::"+this.getClass().getName());
 		this.id = id();
 		this.description = description();
 		this.controller = controller;
@@ -52,6 +80,10 @@ public abstract class AbstractHighlightingRule implements IModularConfiguration{
 		acceptor.addPosition(node.getOffset(), node.getLength() , id);
 	}
 	
+	/**
+	 * Here the style will be defined.
+	 * @return the new TextStyle for Highlighting
+	 */
 	protected abstract TextStyle getTextStyle();
 	
 	public void setHighlightingConfiguration(IHighlightingConfigurationAcceptor acceptor){
@@ -60,7 +92,7 @@ public abstract class AbstractHighlightingRule implements IModularConfiguration{
 	}
 	
 	public boolean canProvideHighlighting(EObject moslObject, INode node){
-		if(!moslObject.eIsProxy())
+		if(moslObject.eIsProxy())
 			EcoreUtil.resolveAll(moslObject);
 		return getHighlightingConditions(moslObject, node);
 	}
@@ -69,6 +101,12 @@ public abstract class AbstractHighlightingRule implements IModularConfiguration{
 		return prio;
 	}
 	
+	/**
+	 * The Highlighting Condition should be defined here
+	 * @param moslObject the corresponding Xtext EObject which is defined in the DSL.
+	 * @param node the current node. This node is from an editor AST which contains every word or whitespaces.
+	 * @return if the Rule fits
+	 */
 	protected abstract boolean getHighlightingConditions(EObject moslObject, INode node);
 	
 	public String getID(){
