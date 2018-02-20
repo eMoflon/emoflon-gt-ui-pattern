@@ -16,18 +16,27 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.wiring.BundleWiring;
 
 /**
- * 
- * @author SaschaEdwinZander
  *
  * The HighlightAutoFactory creates all implementations of {@link AbstractHighlightingRule} which have the Annotation {@link RegisterRule}.
  * But there is one restriction only classes of the bundle where the {@link AbstractHighlightProviderController} is can be loaded. 
- * If Rules want to be used which are in a different bundle as the {@link AbstractHighlightProviderController} then there must be create
- * a subclass from {@link HighlightAutoFactory} and override the method manuallyLoadedClasses. 
+ * If Rules want to be used which are in a different bundle as the {@link AbstractHighlightProviderController} then there must be create a subclass from {@link HighlightAutoFactory} and override the method manuallyLoadedClasses. 
  * The Subclass of the HighlightAutoFactory must then be transfered to the {@link AbstractHighlightProviderController} Constructor.
  * 
+ * <h1>Example:</h1> <i>reuse or use {@link AbstractHighlightingRule}s from other {@link Bundle}s</i>  
+ * <pre>
+ * <code>public class MyHighlightFactory extends HighlightAutoFactory{ 
+ * 	{@literal @}Override
+ *  	protected List<Class<? extends AbstractHighlightingRule>> manuallyLoadedClasses(){ 
+ *  		return Arrays.asList(OtherRule1.class, ... ); 
+ *  	} 
+ * }</code>
+ * </pre>
  * @see AbstractHighlightProviderController
  * @see AbstractHighlightingRule
  * @see RegisterRule
+ * 
+ * @author SaschaEdwinZander
+ * 
  */
 public class HighlightAutoFactory {
 	protected AbstractHighlightProviderController controller;

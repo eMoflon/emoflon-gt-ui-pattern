@@ -19,17 +19,78 @@ import com.google.inject.Binder;
 
 /**
  * 
- * @author SaschaEdwinZander
- * 
  * This class is the most important class of the highlighting framework. 
  * It shares the information of all different kinds of Highlighting. It also connects the Highlighting 
  * It is possible to override the {@link HighlightAutoFactory} by giving the Class of the Subclass to the constructor;  
+ * The controller must be registered by the UIModule (a Xtend class, it is generated)
+ * 
+ * <h1> Examples <h1>
+ * 
+ * <h2> Register Example: </h1> <i>Register the Controller in the UI</i><p>
+ * <pre>
+ * <code>class MyDSLUiModule extends AbstractMyDSLUiModule {
+ *	private val controller = new MyDSLProviderController()
+ *	
+ *	override def void configure(Binder binder){
+ *		controller.bind(binder)
+ *		super.configure(binder)
+ *	} 
+ * }</code>
+ * </pre>
+ * 
+ * <h2> Example 1: </h2> <i>A Controller with new HighlightAutoFactory</i><p>
+ * 
+ * <pre>
+ * <code>public class MyDSLProviderController extends AbstractHighlightProviderController {
+ *
+ *	public MyDSLProviderController(Class<? extends AbstractTokenMapper> tokenClass) {
+ *		super(MyDSLAutoFactory.class,tokenClass);
+ *	}
+ *
+ *	{@literal @}Override
+ *	protected Class<? extends AbstractSemanticHighlightingCalculator> getCalculatorClass() {
+ *		return MyDSLHighlightingCalculator.class;
+ *	}
+ *
+ *	{@literal @}Override
+ *	protected Class<? extends AbstractHighlightingConfiguration> getConfigClass() {
+ *		return MyDSLHighlightingConfiguration.class;
+ *	}
+ *
+ * }</code>
+ * </pre>
+ * 
+ * <h2> Example 2: </h2> <i>A Controller without new HighlightAutoFactory</i>
+ * 
+ * <pre>
+ * <code>public class MyDSLProviderController extends AbstractHighlightProviderController {
+ *
+ *	public MyDSLProviderController(Class<? extends AbstractTokenMapper> tokenClass) {
+ *		super(tokenClass);
+ *	}
+ *
+ *	{@literal @}Override
+ *	protected Class<? extends AbstractSemanticHighlightingCalculator> getCalculatorClass() {
+ *		return MyDSLHighlightingCalculator.class;
+ *	}
+ *
+ *	{@literal @}Override
+ *	protected Class<? extends AbstractHighlightingConfiguration> getConfigClass() {
+ *		return MyDSLHighlightingConfiguration.class;
+ *	}
+ *
+ * }</code>
+ * </pre>
+ * 
+ * 
  * 
  * @see AbstractTokenMapper
  * @see AbstractHighlightingRule
  * @see AbstractHighlightingConfiguration
  * @see AbstractSemanticHighlightingCalculator
  * @see HighlightAutoFactory
+ * 
+ * @author SaschaEdwinZander
  *
  */
 public abstract class AbstractHighlightProviderController {

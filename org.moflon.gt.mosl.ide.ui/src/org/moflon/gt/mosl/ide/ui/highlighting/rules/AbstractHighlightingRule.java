@@ -18,11 +18,43 @@ import org.moflon.gt.mosl.ide.ui.highlighting.utils.XtextColorManager;
 
 /**
  * 
- * @author SaschaEdwinZander
- * 
  * The AbstractHighlightingRule is the basic for semantic TextHighlighting.
  * To activate and create a HighlightingRule the Annotation {@link RegisterRule} must be set at the Top of a class.
  * It is not allowed to change the constructor with more arguments, because Reflection is used.
+ * 
+ * <h1> Example: </h1> <i>A semantic rule for the name this</i>
+ * 
+ * <pre>
+ * <code>@RegisterRule
+ * public class HandleThisHighlightingRule extends AbstractHighlightingRule {
+ * 
+ * 	public HandleThisHighlightingRule(AbstractHighlightProviderController controller) {
+ * 		super(controller);
+ * 		setPrio(500);
+ *	}
+ *
+ *	{@literal @}Override
+ *	protected String id() {
+ *		return "handleThis";
+ *	}
+ *
+ *	{@literal @}Override
+ *	protected String description() {
+ *		return "If the user use the word this it should be handle like a keyword";
+ *	}
+ *
+ *	{@literal @}Override
+ *	protected TextStyle getTextStyle() {
+ *		return controller.getConfig().keywordTextStyle();
+ *	}
+ *
+ *	{@literal @}Override
+ *	protected boolean getHighlightingConditions(EObject moslObject, INode node) {
+ *		return "this".equals(node.getText());
+ *	}
+ *
+ * }</code>
+ * </pre>
  * 
  * @see RegisterRule
  * @see AbstractSemanticHighlightingCalculator
@@ -30,6 +62,8 @@ import org.moflon.gt.mosl.ide.ui.highlighting.utils.XtextColorManager;
  * @see HighlightAutoFactory
  * @see XtextColor
  * @see XtextColorManager
+ *
+ * @author SaschaEdwinZander
  *
  */
 

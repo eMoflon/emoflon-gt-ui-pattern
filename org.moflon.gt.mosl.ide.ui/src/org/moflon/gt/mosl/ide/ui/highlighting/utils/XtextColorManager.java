@@ -4,7 +4,12 @@ import org.eclipse.swt.graphics.RGB;
 import org.moflon.gt.mosl.ide.ui.highlighting.AbstractHighlightingConfiguration;
 
 
-
+/**
+ * Converts an predefined Color ({@link XtextColor}) to a RBG Color. 
+ * 
+ * @author SaschaEdwinZander
+ *
+ */
 public class XtextColorManager
 {
    private AbstractHighlightingConfiguration config;
