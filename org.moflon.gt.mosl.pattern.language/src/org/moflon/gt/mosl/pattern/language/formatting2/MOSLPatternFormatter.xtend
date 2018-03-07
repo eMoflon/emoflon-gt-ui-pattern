@@ -3,25 +3,23 @@
  */
 package org.moflon.gt.mosl.pattern.language.formatting2
 
-import com.google.inject.Inject
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
-import org.moflon.gt.mosl.pattern.language.moslPattern.GraphTransformationPatternFile
-import org.moflon.gt.mosl.pattern.language.moslPattern.PatternModule
-import org.moflon.gt.mosl.pattern.language.services.MOSLPatternGrammarAccess
-import org.moflon.gt.mosl.pattern.language.moslPattern.PatternDef
-import org.moflon.gt.mosl.pattern.language.moslPattern.ObjectVariablePattern
-import org.moflon.gt.mosl.pattern.language.moslPattern.LinkVariablePattern
 import org.moflon.gt.mosl.pattern.language.moslPattern.AbstractAttribute
-import org.moflon.gt.mosl.pattern.language.moslPattern.NACGroup
-import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
 import org.moflon.gt.mosl.pattern.language.moslPattern.ComplexAttributeConstraints
 import org.moflon.gt.mosl.pattern.language.moslPattern.Constraint
+import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
+import org.moflon.gt.mosl.pattern.language.moslPattern.GraphTransformationPatternFile
+import org.moflon.gt.mosl.pattern.language.moslPattern.LinkVariablePattern
+import org.moflon.gt.mosl.pattern.language.moslPattern.NACGroup
+import org.moflon.gt.mosl.pattern.language.moslPattern.ObjectVariablePattern
+import org.moflon.gt.mosl.pattern.language.moslPattern.PatternDef
+import org.moflon.gt.mosl.pattern.language.moslPattern.PatternModule
 import org.moflon.gt.mosl.pattern.language.moslPattern.TemporaryVariable
 
 class MOSLPatternFormatter extends AbstractFormatter2 {
-	
-	@Inject extension MOSLPatternGrammarAccess
+
+	//@Inject extension MOSLPatternGrammarAccess
 
 	private static final String BRACE_LEFT = "{"
 	private static final String BRACE_RIGHT = "}"
@@ -32,7 +30,7 @@ class MOSLPatternFormatter extends AbstractFormatter2 {
 
 	def dispatch void format(GraphTransformationPatternFile graphTransformationPatternFile, extension IFormattableDocument document) {
 		graphTransformationPatternFile.imports.forEach[_import | _import.append[newLine]]
-		
+
 		graphTransformationPatternFile.modules.forEach[module | module.format(document)]
 	}
 
@@ -42,12 +40,12 @@ class MOSLPatternFormatter extends AbstractFormatter2 {
 		patternModule.definitions.forEach[definition | definition.format(document)]
 		patternModule.regionFor.keyword(BRACE_RIGHT).append[newLine]
 	}
-	
+
 	def dispatch void format(ConstraintDef constraintDef, extension IFormattableDocument document) {
 		constraintDef.parameters.forEach[param | param.regionFor.keyword(COMMA).prepend[noSpace].append[oneSpace]]
 		constraintDef.append[newLine]
 	}
-	
+
 	def dispatch void format(PatternDef patternDef, extension IFormattableDocument document) {
 		patternDef.regionFor.keyword(BRACE_LEFT).append[newLine].append[indent]
 		patternDef.parameters.forEach[parameter | parameter.regionFor.keyword(COMMA).prepend[noSpace].append[oneSpace]]
@@ -55,13 +53,13 @@ class MOSLPatternFormatter extends AbstractFormatter2 {
 		patternDef.csps.format(document)
 		patternDef.regionFor.keyword(BRACE_RIGHT).append[newLine]
 	}
-	
+
 	def dispatch void format(NACGroup nac, extension IFormattableDocument document) {
 		nac.regionFor.keyword(BRACE_LEFT).append[newLine].append[indent]
 		nac.objects.forEach[ov | ov.format(document)]
 		nac.regionFor.keyword(BRACE_RIGHT).append[newLine]
-	} 
-	
+	}
+
 	def dispatch void format(ObjectVariablePattern ov, extension IFormattableDocument document) {
 		ov.regionFor.keyword(BRACE_LEFT).append[newLine].append[indent]
 		ov.attributeAssignments.forEach[aa | aa.format(document)]
@@ -69,7 +67,7 @@ class MOSLPatternFormatter extends AbstractFormatter2 {
 		ov.linkVariablePatterns.forEach[lv | lv.format(document)]
 		ov.regionFor.keyword(BRACE_RIGHT).append[newLine]
 	}
-	
+
 	def dispatch void format (LinkVariablePattern lv, extension IFormattableDocument document) {
 		if(lv.op !== null){
 			lv.op.append[oneSpace]
@@ -78,18 +76,18 @@ class MOSLPatternFormatter extends AbstractFormatter2 {
 		lv.regionFor.keyword(ARROW).prepend[oneSpace].append[oneSpace]
 		lv.append[newLine]
 	}
-	
+
 	def dispatch void format (AbstractAttribute aa, extension IFormattableDocument document) {
 		aa.regionFor.keyword(aa.op).prepend[oneSpace].append[oneSpace]
 		aa.append[newLine]
 	}
-	
+
 	def dispatch void format(ComplexAttributeConstraints complexAttributeConstraints, extension IFormattableDocument document) {
 		complexAttributeConstraints.regionFor.keyword(BRACE_LEFT).append[newLine].append[indent]
 		complexAttributeConstraints.variables.forEach[variable | variable.format(document)]
 		complexAttributeConstraints.regionFor.keyword(BRACE_RIGHT).append[newLine]
 	}
-	
+
 	def dispatch void format(Constraint constraint, extension IFormattableDocument document) {
 		constraint.args.forEach[argument | argument.regionFor.keyword(COMMA).prepend[noSpace].append[oneSpace]]
 		constraint.append[newLine]
