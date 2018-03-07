@@ -36,6 +36,8 @@ import org.eclipse.xtext.ui.util.IJdtHelper;
 import org.eclipse.xtext.xtext.ui.wizard.ecore2xtext.Messages;
 import org.eclipse.xtext.xtext.wizard.EPackageInfo;
 import org.moflon.codegen.eclipse.CodeGeneratorPlugin;
+import org.moflon.core.utilities.eMoflonEMFUtil;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -47,7 +49,7 @@ import com.google.common.collect.Maps;
 public class EPackageChooser {
 
 	private static final String PATH_TO_ECORE_ECORE = "org.eclipse.emf.ecore/model/Ecore.ecore";
-	
+
 	private final Shell shell;
 
 	private final IJdtHelper jdtHelper;
@@ -56,11 +58,11 @@ public class EPackageChooser {
 		this.shell = shell;
 		this.jdtHelper = jdtHelper;
 	}
-	
+
 	protected List<EPackageInfo> createEPackageInfosFromGenModel(URI genModelURI) {
 		ResourceSet resourceSet = createResourceSet(genModelURI);
 		try {
-			CodeGeneratorPlugin.createPluginToResourceMapping(resourceSet);
+			eMoflonEMFUtil.createPluginToResourceMapping(resourceSet);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
