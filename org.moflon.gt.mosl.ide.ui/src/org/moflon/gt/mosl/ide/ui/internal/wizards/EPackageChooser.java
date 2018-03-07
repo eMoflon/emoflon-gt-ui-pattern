@@ -35,7 +35,6 @@ import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
 import org.eclipse.xtext.ui.util.IJdtHelper;
 import org.eclipse.xtext.xtext.ui.wizard.ecore2xtext.Messages;
 import org.eclipse.xtext.xtext.wizard.EPackageInfo;
-import org.moflon.codegen.eclipse.CodeGeneratorPlugin;
 import org.moflon.core.utilities.eMoflonEMFUtil;
 
 import com.google.common.collect.Iterables;
