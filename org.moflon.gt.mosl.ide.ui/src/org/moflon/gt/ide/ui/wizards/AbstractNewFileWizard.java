@@ -5,6 +5,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
 import org.moflon.core.ui.UiUtilities;
+import org.moflon.gt.mosl.ide.ui.wizards.AbstractNewFileInfoPage;
+import org.moflon.gt.mosl.ide.ui.wizards.GetEcoreProjectPage;
 public abstract class AbstractNewFileWizard  extends BasicNewFileResourceWizard{
 
 	private AbstractNewFileInfoPage mainPage;
