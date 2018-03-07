@@ -17,7 +17,6 @@ import org.moflon.codegen.eclipse.CodeGeneratorPlugin
 import org.moflon.gt.mosl.ide.core.exceptions.CannotFindScopeException
 import org.moflon.gt.mosl.ide.core.scoping.ScopeProviderHelper
 import org.moflon.gt.mosl.ide.core.scoping.utils.MOSLScopeUtil
-import org.moflon.gt.mosl.ide.core.utils.MOSLUtil
 import org.moflon.gt.mosl.pattern.language.moslPattern.AbstractAttribute
 import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeContainer
 import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeExpression
@@ -29,6 +28,7 @@ import org.moflon.gt.mosl.pattern.language.moslPattern.LinkVariablePattern
 import org.moflon.gt.mosl.pattern.language.moslPattern.ObjectVariablePattern
 import org.moflon.gt.mosl.pattern.language.moslPattern.PatternModule
 import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidatorUtil
+import org.moflon.gt.mosl.ide.core.utils.XtextUtil
 
 /**
  * This class contains custom scoping description.
@@ -50,7 +50,7 @@ class MOSLPatternScopeProvider extends AbstractMOSLPatternScopeProvider {
 			return getScopeByType(context, EReference)
 		}
 		else if(searchForEDatatype(context, reference)){
-			return getScopeByType(context, EDataType, MOSLUtil.instance.ecoreEDataTypes)
+			return getScopeByType(context, EDataType, XtextUtil.instance.ecoreEDataTypes)
 		}
 		else if(searchForEAttribute(context, reference)){
 			return getScopeForEAttributes(context as AttributeContainer)
@@ -83,7 +83,7 @@ class MOSLPatternScopeProvider extends AbstractMOSLPatternScopeProvider {
 
 	def getScopeForConstraint(Constraint constraint){
 		val patternmodule = MOSLScopeUtil.instance.getRootObject(constraint, PatternModule)
-		val candidates = MOSLUtil.instance.mapToSubtype(patternmodule.definitions, ConstraintDef)
+		val candidates = XtextUtil.instance.mapToSubtype(patternmodule.definitions, ConstraintDef)
 		candidates.addAll(MOSLPatternValidatorUtil.instance.patternHelper.buildInConstraints)
 		Scopes.scopeFor(candidates)
 	}

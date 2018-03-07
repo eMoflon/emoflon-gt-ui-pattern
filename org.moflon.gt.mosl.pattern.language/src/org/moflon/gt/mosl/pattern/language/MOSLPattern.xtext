@@ -167,7 +167,7 @@ AttributeContainer:AbstractAttribute | AttributeExpression;
 
 PatternObject: PatternVariable | Expression;
 
-PatternVariable:NACAndObjectVariable | LinkVariablePattern;
+PatternVariable:ObjectVariablePattern | LinkVariablePattern;
 
 EDatatypeContainer:(TemporaryVariable | ConstraintDefParameter);
 

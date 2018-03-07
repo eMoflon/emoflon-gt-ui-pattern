@@ -4,10 +4,18 @@
 package org.moflon.gt.mosl.pattern.language.ui
 
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
+import org.moflon.gt.mosl.pattern.language.ui.highlighting.MOSLPatternHighlightProviderController
+import com.google.inject.Binder
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
  */
 @FinalFieldsConstructor
 class MOSLPatternUiModule extends AbstractMOSLPatternUiModule {
+	private val controller = new MOSLPatternHighlightProviderController()
+	
+	override def void configure(Binder binder){
+		controller.bind(binder)
+		super.configure(binder)
+	} 
 }

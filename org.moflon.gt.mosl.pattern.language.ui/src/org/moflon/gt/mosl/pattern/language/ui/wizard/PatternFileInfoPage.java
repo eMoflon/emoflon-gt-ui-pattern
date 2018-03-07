@@ -1,8 +1,8 @@
 package org.moflon.gt.mosl.pattern.language.ui.wizard;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.moflon.gt.ide.ui.wizards.AbstractNewFileInfoPage;
-import org.moflon.gt.ide.ui.wizards.WizardFileTemplate;
+import org.moflon.gt.mosl.ide.ui.wizards.AbstractNewFileInfoPage;
+import org.moflon.gt.mosl.ide.ui.wizards.WizardFileTemplate;
 
 
 public class PatternFileInfoPage extends AbstractNewFileInfoPage{

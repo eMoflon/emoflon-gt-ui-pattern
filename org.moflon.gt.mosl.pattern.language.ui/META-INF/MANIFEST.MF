@@ -22,7 +22,8 @@ Require-Bundle: org.moflon.gt.mosl.pattern.language,
  org.moflon.gt.mosl.ide.ui
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.moflon.gt.mosl.pattern.language.ui.internal,
- org.moflon.gt.mosl.pattern.language.ui.quickfix,
- org.moflon.gt.mosl.pattern.language.ui.contentassist
+Export-Package: org.moflon.gt.mosl.pattern.language.ui.contentassist,
+ org.moflon.gt.mosl.pattern.language.ui.highlighting.rules,
+ org.moflon.gt.mosl.pattern.language.ui.internal,
+ org.moflon.gt.mosl.pattern.language.ui.quickfix
 Bundle-Activator: org.moflon.gt.mosl.pattern.language.ui.internal.LanguageActivator
