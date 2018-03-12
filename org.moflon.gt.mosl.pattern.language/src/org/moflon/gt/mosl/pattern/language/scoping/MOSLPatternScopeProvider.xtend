@@ -14,9 +14,6 @@ import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.scoping.Scopes
 import org.moflon.core.utilities.eMoflonEMFUtil
-import org.moflon.gt.mosl.ide.core.exceptions.CannotFindScopeException
-import org.moflon.gt.mosl.ide.core.scoping.ScopeProviderHelper
-import org.moflon.gt.mosl.ide.core.scoping.utils.MOSLScopeUtil
 import org.moflon.gt.mosl.pattern.language.moslPattern.AbstractAttribute
 import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeContainer
 import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeExpression
@@ -28,7 +25,10 @@ import org.moflon.gt.mosl.pattern.language.moslPattern.LinkVariablePattern
 import org.moflon.gt.mosl.pattern.language.moslPattern.ObjectVariablePattern
 import org.moflon.gt.mosl.pattern.language.moslPattern.PatternModule
 import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidatorUtil
-import org.moflon.gt.mosl.ide.core.utils.XtextUtil
+import org.moflon.core.xtext.exceptions.CannotFindScopeException
+import org.moflon.core.xtext.utils.XtextUtil
+import org.moflon.core.xtext.scoping.ScopeProviderHelper
+import org.moflon.core.xtext.scoping.utils.MOSLScopeUtil
 
 /**
  * This class contains custom scoping description.

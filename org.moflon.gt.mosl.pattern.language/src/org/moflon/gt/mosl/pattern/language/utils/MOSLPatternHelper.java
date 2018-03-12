@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.moflon.gt.mosl.ide.core.scoping.utils.MOSLScopeUtil;
+import org.moflon.core.xtext.scoping.utils.MOSLScopeUtil;
 import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef;
 import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDefParameter;
 import org.moflon.gt.mosl.pattern.language.moslPattern.GraphTransformationPatternFile;
