@@ -7,7 +7,7 @@
       plugin="org.moflon.core.branding">
 
    <requires>
-      <import feature="org.moflon.core.feature" version="1.0.0" match="greaterOrEqual"/>
+      <import feature="org.moflon.core.feature" version="1.1.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
