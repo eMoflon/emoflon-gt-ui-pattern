@@ -4,9 +4,9 @@
 package org.moflon.gt.mosl.pattern.language.ui.contentassist
 
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
-import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.Assignment
+import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
+import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidatorUtil
 
 /**

@@ -3,7 +3,7 @@
  */
 package org.moflon.gt.mosl.pattern.language
 
-
+import org.moflon.gt.mosl.pattern.language.AbstractMOSLPatternRuntimeModule
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
