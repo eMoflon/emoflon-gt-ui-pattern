@@ -73,13 +73,13 @@ public class EPackageChooser {
 				GenPackage genPackage = (GenPackage) next;
 				EPackage ePackage = genPackage.getEcorePackage();
 				URI importURI;
-				if(ePackage.eResource() == null) {
+				if (ePackage.eResource() == null) {
 					importURI = URI.createURI(ePackage.getNsURI());
 				} else {
 					importURI = ePackage.eResource().getURI();
 				}
-				EPackageInfo ePackageInfo = new EPackageInfo(ePackage, importURI, genModelURI, genPackage
-						.getQualifiedPackageInterfaceName(), genPackage.getGenModel().getModelPluginID());
+				EPackageInfo ePackageInfo = new EPackageInfo(ePackage, importURI, genModelURI,
+						genPackage.getQualifiedPackageInterfaceName(), genPackage.getGenModel().getModelPluginID());
 				ePackageInfos.add(ePackageInfo);
 			} else if (!(next instanceof GenModel)) {
 				i.prune();

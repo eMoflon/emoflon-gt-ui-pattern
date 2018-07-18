@@ -7,7 +7,8 @@ import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
 import org.moflon.core.ui.UiUtilities;
 import org.moflon.gt.mosl.ide.ui.wizards.AbstractNewFileInfoPage;
 import org.moflon.gt.mosl.ide.ui.wizards.GetEcoreProjectPage;
-public abstract class AbstractNewFileWizard  extends BasicNewFileResourceWizard{
+
+public abstract class AbstractNewFileWizard extends BasicNewFileResourceWizard {
 
 	private AbstractNewFileInfoPage mainPage;
 	private GetEcoreProjectPage ecoreProjectPage;
@@ -15,19 +16,19 @@ public abstract class AbstractNewFileWizard  extends BasicNewFileResourceWizard{
 
 	@Override
 	public void addPages() {
-			mainPage = createMainPage();
-			addPage(mainPage);
+		mainPage = createMainPage();
+		addPage(mainPage);
 
-			ecoreProjectPage = new GetEcoreProjectPage(selection);
-			addPage(ecoreProjectPage);
+		ecoreProjectPage = new GetEcoreProjectPage(selection);
+		addPage(ecoreProjectPage);
 
-			ecoreProjectPage.setPreviousPage(mainPage);
+		ecoreProjectPage.setPreviousPage(mainPage);
 	}
 
 	abstract protected AbstractNewFileInfoPage createMainPage();
 
 	@Override
-	public boolean performFinish(){
+	public boolean performFinish() {
 		mainPage.getWizardFileTemplate().setEPackageImports(ecoreProjectPage.getSelectedPackages());
 		IFile file = mainPage.createNewFile();
 		UiUtilities.openDefaultEditorForFile(file);

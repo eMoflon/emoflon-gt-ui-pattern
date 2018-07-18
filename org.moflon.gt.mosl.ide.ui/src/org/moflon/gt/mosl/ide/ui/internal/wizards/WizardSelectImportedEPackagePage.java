@@ -29,6 +29,7 @@ import org.eclipse.xtext.ui.util.IJdtHelper;
 import org.eclipse.xtext.xtext.ui.wizard.ecore2xtext.Messages;
 import org.eclipse.xtext.xtext.wizard.EPackageInfo;
 import com.google.common.collect.Iterables;
+
 /**
  * @author Jan Koehnlein - Initial contribution and API
  */
@@ -42,7 +43,7 @@ public class WizardSelectImportedEPackagePage extends WizardPage {
 	private TableViewer importedEPackagesViewer;
 
 	private final IJdtHelper jdtHelper;
-	
+
 	private List<EPackage> selectedPackages;
 
 	public WizardSelectImportedEPackagePage(String pageName, IStructuredSelection selection, IJdtHelper jdtHelper) {
@@ -54,11 +55,11 @@ public class WizardSelectImportedEPackagePage extends WizardPage {
 	}
 
 	private void addToSelectedtEPackages(Object object) {
-		if(object instanceof EPackageInfo) {
+		if (object instanceof EPackageInfo) {
 			selectedPackages.add(EPackageInfo.class.cast(object).getEPackage());
 		}
 	}
-	
+
 	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -69,17 +70,17 @@ public class WizardSelectImportedEPackagePage extends WizardPage {
 		importedEPackagesViewer = new TableViewer(composite, SWT.BORDER);
 		importedEPackagesViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 3));
 		importedEPackagesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@SuppressWarnings("unchecked")
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection iSelection = event.getSelection();
-				if(iSelection instanceof StructuredSelection) {
+				if (iSelection instanceof StructuredSelection) {
 					selectedPackages.clear();
-					StructuredSelection.class.cast(iSelection).iterator().forEachRemaining(obj -> addToSelectedtEPackages(obj));
+					StructuredSelection.class.cast(iSelection).iterator()
+							.forEachRemaining(obj -> addToSelectedtEPackages(obj));
 				}
-				
-				
+
 				updateUI();
 			}
 		});
@@ -199,7 +200,7 @@ public class WizardSelectImportedEPackagePage extends WizardPage {
 	public List<EPackage> getSelectedPackages() {
 		return selectedPackages;
 	}
-	
+
 	public EPackageInfo getDefaultEPackageInfo() {
 		if (defaultEPackageInfo == null && !ePackageInfos.isEmpty()) {
 			defaultEPackageInfo = ePackageInfos.iterator().next();

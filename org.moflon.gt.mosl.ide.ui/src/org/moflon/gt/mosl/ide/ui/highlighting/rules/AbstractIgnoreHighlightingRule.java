@@ -6,11 +6,7 @@ import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfigurationAcce
 import org.eclipse.xtext.ui.editor.utils.TextStyle;
 import org.moflon.gt.mosl.ide.ui.highlighting.AbstractHighlightProviderController;
 
-
-
 public abstract class AbstractIgnoreHighlightingRule extends AbstractHighlightingRule {
-
-
 
 	public AbstractIgnoreHighlightingRule(AbstractHighlightProviderController controller) {
 		super(controller);
@@ -22,19 +18,19 @@ public abstract class AbstractIgnoreHighlightingRule extends AbstractHighlightin
 		return null;
 	}
 
-	protected void setHighlighting(INode node){
-		//do nothing
+	protected void setHighlighting(INode node) {
+		// do nothing
 	}
-	
-	public void setHighlightingConfiguration(IHighlightingConfigurationAcceptor acceptor){
-		//do nothing
+
+	public void setHighlightingConfiguration(IHighlightingConfigurationAcceptor acceptor) {
+		// do nothing
 	}
-	
+
 	@Override
 	protected boolean getHighlightingConditions(EObject moslObject, INode node) {
 		return getIgnoreConditions(moslObject, node);
 	}
-	
+
 	protected abstract boolean getIgnoreConditions(EObject moslObject, INode node);
 
 }
