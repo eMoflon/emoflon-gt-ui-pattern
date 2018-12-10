@@ -29,3 +29,4 @@ Export-Package: org.moflon.gt.mosl.ide.ui.highlighting,
  org.moflon.gt.mosl.ide.ui.highlighting.rules,
  org.moflon.gt.mosl.ide.ui.highlighting.utils,
  org.moflon.gt.mosl.ide.ui.wizards
+Automatic-Module-Name: org.moflon.gt.mosl.ide.ui
