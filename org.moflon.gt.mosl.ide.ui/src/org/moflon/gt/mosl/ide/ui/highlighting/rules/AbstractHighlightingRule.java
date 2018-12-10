@@ -141,11 +141,10 @@ public abstract class AbstractHighlightingRule implements IModularConfiguration 
 	/**
 	 * The Highlighting Condition should be defined here
 	 * 
-	 * @param moslObject
-	 *            the corresponding Xtext EObject which is defined in the DSL.
-	 * @param node
-	 *            the current node. This node is from an editor AST which contains
-	 *            every word or whitespaces.
+	 * @param moslObject the corresponding Xtext EObject which is defined in the
+	 *                   DSL.
+	 * @param node       the current node. This node is from an editor AST which
+	 *                   contains every word or whitespaces.
 	 * @return if the Rule fits
 	 */
 	protected abstract boolean getHighlightingConditions(EObject moslObject, INode node);
