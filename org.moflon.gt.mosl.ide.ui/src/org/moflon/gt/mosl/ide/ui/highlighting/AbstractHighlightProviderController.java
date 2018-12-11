@@ -8,44 +8,45 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.DefaultSemanticHighlightingCalculator;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
-import org.moflon.gt.mosl.ide.ui.highlighting.exceptions.IDAlreadyExistException;
 import org.moflon.gt.mosl.ide.ui.highlighting.rules.AbstractHighlightingRule;
 import org.moflon.gt.mosl.ide.ui.highlighting.utils.XtextColorManager;
+
 import com.google.inject.Binder;
 
 /**
- * 
+ *
  * This class is the most important class of the highlighting framework. It
  * shares the information of all different kinds of Highlighting. It also
  * connects the Highlighting It is possible to override the
  * {@link HighlightAutoFactory} by giving the Class of the Subclass to the
  * constructor; The controller must be registered by the UIModule (a Xtend
  * class, it is generated)
- * 
+ *
  * <h1>Examples
  * <h1>
- * 
+ *
  * <h2>Register Example:</h1> <i>Register the Controller in the UI</i>
  * <p>
- * 
+ *
  * <pre>
  * <code>class MyDSLUiModule extends AbstractMyDSLUiModule {
  *	private val controller = new MyDSLProviderController()
- *	
+ *
  *	override def void configure(Binder binder){
  *		controller.bind(binder)
  *		super.configure(binder)
- *	} 
+ *	}
  * }</code>
  * </pre>
- * 
+ *
  * <h2>Example 1:</h2> <i>A Controller with new HighlightAutoFactory</i>
  * <p>
- * 
+ *
  * <pre>
  * <code>public class MyDSLProviderController extends AbstractHighlightProviderController {
  *
@@ -65,9 +66,9 @@ import com.google.inject.Binder;
  *
  * }</code>
  * </pre>
- * 
+ *
  * <h2>Example 2:</h2> <i>A Controller without new HighlightAutoFactory</i>
- * 
+ *
  * <pre>
  * <code>public class MyDSLProviderController extends AbstractHighlightProviderController {
  *
@@ -87,15 +88,15 @@ import com.google.inject.Binder;
  *
  * }</code>
  * </pre>
- * 
- * 
- * 
+ *
+ *
+ *
  * @see AbstractTokenMapper
  * @see AbstractHighlightingRule
  * @see AbstractHighlightingConfiguration
  * @see AbstractSemanticHighlightingCalculator
  * @see HighlightAutoFactory
- * 
+ *
  * @author SaschaEdwinZander
  *
  */
@@ -161,16 +162,16 @@ public abstract class AbstractHighlightProviderController {
 			}
 	}
 
-	public void init(HighlightAutoFactory rulesFactory) {
+	private void init(HighlightAutoFactory rulesFactory) {
 		rules.clear();
 		ruleNames.clear();
 		rulesFactory.setController(this);
 		rulesFactory.createAllInstances();
 	}
 
-	public void addHighlightRule(AbstractHighlightingRule rule) throws IDAlreadyExistException {
+	public void addHighlightRule(AbstractHighlightingRule rule) {
 		if (ruleNames.contains(rule.getID()))
-			throw new IDAlreadyExistException();
+			throw new IllegalArgumentException("ID already in use");
 		else {
 			rules.add(rule);
 			ruleNames.add(rule.getID());

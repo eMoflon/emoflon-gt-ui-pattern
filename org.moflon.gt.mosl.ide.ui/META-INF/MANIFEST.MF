@@ -25,7 +25,6 @@ Require-Bundle: org.moflon.ide.ui,
  org.moflon.core.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: org.moflon.gt.mosl.ide.ui.highlighting,
- org.moflon.gt.mosl.ide.ui.highlighting.exceptions,
  org.moflon.gt.mosl.ide.ui.highlighting.rules,
  org.moflon.gt.mosl.ide.ui.highlighting.utils,
  org.moflon.gt.mosl.ide.ui.wizards

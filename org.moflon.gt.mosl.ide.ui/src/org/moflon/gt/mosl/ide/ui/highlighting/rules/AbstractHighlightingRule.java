@@ -12,23 +12,22 @@ import org.moflon.gt.mosl.ide.ui.highlighting.AbstractHighlightingConfiguration;
 import org.moflon.gt.mosl.ide.ui.highlighting.AbstractSemanticHighlightingCalculator;
 import org.moflon.gt.mosl.ide.ui.highlighting.HighlightAutoFactory;
 import org.moflon.gt.mosl.ide.ui.highlighting.RegisterRule;
-import org.moflon.gt.mosl.ide.ui.highlighting.exceptions.IDAlreadyExistException;
 import org.moflon.gt.mosl.ide.ui.highlighting.utils.XtextColor;
 import org.moflon.gt.mosl.ide.ui.highlighting.utils.XtextColorManager;
 
 /**
- * 
+ *
  * The AbstractHighlightingRule is the basic for semantic TextHighlighting. To
  * activate and create a HighlightingRule the Annotation {@link RegisterRule}
  * must be set at the Top of a class. It is not allowed to change the
  * constructor with more arguments, because Reflection is used.
- * 
+ *
  * <h1>Example:</h1> <i>A semantic rule for the name this</i>
- * 
+ *
  * <pre>
  * <code>@RegisterRule
  * public class HandleThisHighlightingRule extends AbstractHighlightingRule {
- * 
+ *
  * 	public HandleThisHighlightingRule(AbstractHighlightProviderController controller) {
  * 		super(controller);
  * 		setPrio(500);
@@ -56,7 +55,7 @@ import org.moflon.gt.mosl.ide.ui.highlighting.utils.XtextColorManager;
  *
  * }</code>
  * </pre>
- * 
+ *
  * @see RegisterRule
  * @see AbstractSemanticHighlightingCalculator
  * @see AbstractHighlightingConfiguration
@@ -104,7 +103,7 @@ public abstract class AbstractHighlightingRule implements IModularConfiguration 
 		this.controller = controller;
 		try {
 			this.controller.addHighlightRule(this);
-		} catch (IDAlreadyExistException e) {
+		} catch (Exception e) {
 			logger.error("ID already exist", e);
 		}
 	}
@@ -119,7 +118,7 @@ public abstract class AbstractHighlightingRule implements IModularConfiguration 
 
 	/**
 	 * Here the style will be defined.
-	 * 
+	 *
 	 * @return the new TextStyle for Highlighting
 	 */
 	protected abstract TextStyle getTextStyle();
@@ -140,7 +139,7 @@ public abstract class AbstractHighlightingRule implements IModularConfiguration 
 
 	/**
 	 * The Highlighting Condition should be defined here
-	 * 
+	 *
 	 * @param moslObject the corresponding Xtext EObject which is defined in the
 	 *                   DSL.
 	 * @param node       the current node. This node is from an editor AST which
