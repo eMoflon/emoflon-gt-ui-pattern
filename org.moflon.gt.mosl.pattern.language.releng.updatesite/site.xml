@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.moflon.gt.mosl.pattern.language.feature_1.0.0.qualifier.jar" id="org.moflon.gt.mosl.pattern.language.feature" version="1.0.0.qualifier">
+      <category name="org.moflon.gt.mosl.pattern.language.main"/>
+   </feature>
+   <category-def name="org.moflon.gt.mosl.pattern.language.main" label="eMoflon GT Pattern Language"/>
+</site>

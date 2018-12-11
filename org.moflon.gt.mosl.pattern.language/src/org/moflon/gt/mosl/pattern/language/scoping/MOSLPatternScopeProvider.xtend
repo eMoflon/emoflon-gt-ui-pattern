@@ -3,43 +3,44 @@
  */
 package org.moflon.gt.mosl.pattern.language.scoping
 
-import org.moflon.ide.mosl.core.scoping.ScopeProviderHelper
-import org.eclipse.emf.ecore.EPackage
+import java.util.List
 import org.apache.log4j.Logger
-import org.moflon.ide.mosl.core.exceptions.CannotFindScopeException
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EClassifier
+import org.eclipse.emf.ecore.EDataType
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EPackage
+import org.eclipse.emf.ecore.EReference
+import org.eclipse.xtext.scoping.Scopes
+import org.moflon.core.utilities.eMoflonEMFUtil
+import org.moflon.gt.mosl.pattern.language.moslPattern.AbstractAttribute
+import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeContainer
+import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeExpression
+import org.moflon.gt.mosl.pattern.language.moslPattern.Constraint
+import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
+import org.moflon.gt.mosl.pattern.language.moslPattern.EDatatypeContainer
+import org.moflon.gt.mosl.pattern.language.moslPattern.GraphTransformationPatternFile
 import org.moflon.gt.mosl.pattern.language.moslPattern.LinkVariablePattern
 import org.moflon.gt.mosl.pattern.language.moslPattern.ObjectVariablePattern
-import org.moflon.codegen.eclipse.CodeGeneratorPlugin
-import org.moflon.gt.mosl.pattern.language.moslPattern.GraphTransformationPatternFile
-import org.eclipse.emf.common.util.URI
-import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDefParameter
-import java.util.List
-import org.eclipse.emf.ecore.EDataType
-import org.moflon.ide.mosl.core.scoping.utils.MOSLScopeUtil
-import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeExpression
-import org.eclipse.xtext.scoping.Scopes
-import org.moflon.gt.mosl.pattern.language.moslPattern.AttributeContainer
-import org.moflon.gt.mosl.pattern.language.moslPattern.AbstractAttribute
-import org.moflon.ide.mosl.core.utils.MOSLUtil
-import org.moflon.gt.mosl.pattern.language.moslPattern.Constraint
 import org.moflon.gt.mosl.pattern.language.moslPattern.PatternModule
-import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef
 import org.moflon.gt.mosl.pattern.language.validation.MOSLPatternValidatorUtil
+import org.moflon.core.xtext.exceptions.CannotFindScopeException
+import org.moflon.core.xtext.utils.XtextUtil
+import org.moflon.core.xtext.scoping.ScopeProviderHelper
+import org.moflon.core.xtext.scoping.utils.MOSLScopeUtil
 
 /**
  * This class contains custom scoping description.
- * 
+ *
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
  * on how and when to use it.
  */
 class MOSLPatternScopeProvider extends AbstractMOSLPatternScopeProvider {
 	private ScopeProviderHelper<EPackage> scopeHelper = new ScopeProviderHelper();
 	private Logger log = Logger.getLogger(MOSLPatternScopeProvider.getClass())
-	 
-	
+
+
 	override getScope(EObject context, EReference reference) {
 	try{
 		if(searchForEClassifier(context,reference)){
@@ -49,7 +50,7 @@ class MOSLPatternScopeProvider extends AbstractMOSLPatternScopeProvider {
 			return getScopeByType(context, EReference)
 		}
 		else if(searchForEDatatype(context, reference)){
-			return getScopeByType(context, EDataType, MOSLUtil.instance.ecoreEDataTypes)
+			return getScopeByType(context, EDataType, XtextUtil.instance.ecoreEDataTypes)
 		}
 		else if(searchForEAttribute(context, reference)){
 			return getScopeForEAttributes(context as AttributeContainer)
@@ -61,63 +62,63 @@ class MOSLPatternScopeProvider extends AbstractMOSLPatternScopeProvider {
 	}
 		super.getScope(context, reference);
 	}
-	
-	
-	
+
+
+
 	def searchForEDatatype(EObject context, EReference reference) {
-		return context instanceof ConstraintDefParameter && reference.name.equals("type")
+		return context instanceof EDatatypeContainer && reference.name.equals("eType")
 	}
-	
+
 	def boolean searchForEReferences(EObject context, EReference reference) {
 		return context instanceof LinkVariablePattern && reference.name.equals("reference")
 	}
-	
+
 	def getScopeByType(EObject context, Class<? extends EObject> type )throws CannotFindScopeException{
-		getScopeByType(context, type, null)	
+		getScopeByType(context, type, null)
 	}
-	
+
 	def searchForConstraints(EObject context, EReference reference){
 		context instanceof Constraint && reference.name.equals("name")
 	}
-	
+
 	def getScopeForConstraint(Constraint constraint){
 		val patternmodule = MOSLScopeUtil.instance.getRootObject(constraint, PatternModule)
-		val candidates = MOSLUtil.instance.mapToSubtype(patternmodule.definitions, ConstraintDef)
+		val candidates = XtextUtil.instance.mapToSubtype(patternmodule.definitions, ConstraintDef)
 		candidates.addAll(MOSLPatternValidatorUtil.instance.patternHelper.buildInConstraints)
 		Scopes.scopeFor(candidates)
 	}
-	
+
 	def <T extends EObject> getScopeByType(EObject context, Class<T> type, List<T> currentFound) throws CannotFindScopeException{
 		val set = scopeHelper.resourceSet
-		CodeGeneratorPlugin.createPluginToResourceMapping(set);		
+		eMoflonEMFUtil.createPluginToResourceMapping(set);
 		var gtf = getGraphTransformationFile(context)
 		var uris = gtf.imports.map[importValue | URI.createURI(importValue.name)];
-		return scopeHelper.createScope(uris, EPackage, type, currentFound)		 
+		return scopeHelper.createScope(uris, EPackage, type, currentFound)
 	}
-	
+
 	def getScopeForEAttributes(AttributeContainer attributeExpression){
 		val objectVariable = getObjectVariable(attributeExpression)
-		val eClass = objectVariable.type
+		val eClass = objectVariable.EType as EClass
 		Scopes.scopeFor(eClass.EAllAttributes)
 	}
-	
+
 	def getObjectVariable(AttributeContainer attributeContainer){
 		if(attributeContainer instanceof AbstractAttribute)
 			return MOSLScopeUtil.instance.getRootObject(attributeContainer, ObjectVariablePattern)
 		else if (attributeContainer instanceof AttributeExpression)
 			return attributeContainer.objectVar
-		else throw new RuntimeException("Illegal Access") 
+		else throw new RuntimeException("Illegal Access")
 	}
-	
+
 	def GraphTransformationPatternFile getGraphTransformationFile(EObject context){
 		MOSLScopeUtil.instance.getRootObject(context, GraphTransformationPatternFile)
 	}
-	
+
 	def boolean searchForEClassifier(EObject context, EReference reference){
-		return context instanceof ObjectVariablePattern  && reference.name.equals("type")  
+		return context instanceof ObjectVariablePattern  && reference.name.equals("eType")
 	}
-	
+
 	def boolean searchForEAttribute(EObject context, EReference reference){
-		context instanceof AttributeContainer && reference.name.equals("name") 
+		context instanceof AttributeContainer && reference.name.equals("name")
 	}
 }

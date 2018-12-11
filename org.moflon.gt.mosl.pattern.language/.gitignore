@@ -1,6 +1,8 @@
 /bin/
+/target/
 /src-gen/*
 /xtend-gen/*
 /model/generated/*
+/target
 plugin.xml_gen
 !/**/.keep*

@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.moflon.core.xtext.scoping.utils.MOSLScopeUtil;
 import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDef;
 import org.moflon.gt.mosl.pattern.language.moslPattern.ConstraintDefParameter;
 import org.moflon.gt.mosl.pattern.language.moslPattern.GraphTransformationPatternFile;
 import org.moflon.gt.mosl.pattern.language.moslPattern.MoslPatternFactory;
 import org.moflon.gt.mosl.pattern.language.moslPattern.PatternModule;
-import org.moflon.ide.mosl.core.scoping.utils.MOSLScopeUtil;
 import org.moflon.sdm.constraints.operationspecification.AttributeConstraintLibrary;
 import org.moflon.sdm.constraints.operationspecification.ConstraintSpecification;
 import org.moflon.sdm.constraints.operationspecification.OperationspecificationPackage;
@@ -68,7 +68,7 @@ public class MOSLPatternHelper
    {
       ConstraintDef constDef = MoslPatternFactory.eINSTANCE.createConstraintDef();
       List<ParameterType> parameters = conSpec.getParameterTypes();
-      Set<String> typeNames = parameters.stream().map(param -> param.getType().getName().substring(1)).collect(Collectors.toSet());
+      Set<String> typeNames = parameters.stream().map(param -> param.getType().getName()).collect(Collectors.toSet());
       String name = getNameOfConstraintSpecification(conSpec) + "_" + typeNames.stream().reduce("", (a, b) -> a + b);
       constDef.setName(name);
       ins = 0;
@@ -117,7 +117,7 @@ public class MOSLPatternHelper
    {
       ConstraintDefParameter constDefParam = MoslPatternFactory.eINSTANCE.createConstraintDefParameter();
       constDefParam.setName("arg" + ins++);
-      constDefParam.setType(EDataType.class.cast(paramType.getType()));
+      constDefParam.setEType(EDataType.class.cast(paramType.getType()));
       return constDefParam;
    }
 
@@ -133,7 +133,7 @@ public class MOSLPatternHelper
          return false;
       
       for(int index =0; index < paramTypes.size(); ++index){
-         if(!paramTypes.get(index).getType().equals(constDefParams.get(index).getType()))
+         if(!paramTypes.get(index).getType().equals(constDefParams.get(index).getEType()))
             return false;
       }
       

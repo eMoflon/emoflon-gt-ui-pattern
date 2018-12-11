@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.moflon.core.utilities.WorkspaceHelper;
+import org.moflon.core.xtext.scoping.utils.MOSLScopeUtil;
+import org.moflon.core.xtext.utils.XtextUtil;
 import org.moflon.gt.mosl.pattern.language.exceptions.LibFileDoesnotExitException;
 import org.moflon.gt.mosl.pattern.language.exceptions.LibFolderDoesnNotExistException;
 import org.moflon.gt.mosl.pattern.language.exceptions.PatternLanguageException;
@@ -23,8 +25,6 @@ import org.moflon.gt.mosl.pattern.language.moslPattern.IntegerLiteralExpression;
 import org.moflon.gt.mosl.pattern.language.moslPattern.LiteralExpression;
 import org.moflon.gt.mosl.pattern.language.moslPattern.StringLiteralExpression;
 import org.moflon.gt.mosl.pattern.language.utils.MOSLPatternHelper;
-import org.moflon.ide.mosl.core.scoping.utils.MOSLScopeUtil;
-import org.moflon.ide.mosl.core.utils.MOSLUtil;
 import org.moflon.sdm.constraints.operationspecification.AttributeConstraintLibrary;
 import org.moflon.sdm.constraints.operationspecification.ConstraintSpecification;
 import org.moflon.sdm.constraints.operationspecification.OperationspecificationFactory;
@@ -61,7 +61,7 @@ public class MOSLPatternValidatorUtil
 
    private EDataType getEDataTypeByName(String typeName)
    {
-      return MOSLUtil.getInstance().getEcoreEDataTypes().parallelStream().filter(type -> type.getName().equals(typeName)).findFirst().get();
+      return XtextUtil.getInstance().getEcoreEDataTypes().parallelStream().filter(type -> type.getName().equals(typeName)).findFirst().get();
    }
 
    private String getProjectNameFromURI(URI uri)
@@ -163,7 +163,7 @@ public class MOSLPatternValidatorUtil
    private ParameterType convertFromConstraintDefPararmeterToParameterType(ConstraintDefParameter constraintDefParameter)
    {
       ParameterType parameterType = OperationspecificationFactory.eINSTANCE.createParameterType();
-      parameterType.setType(constraintDefParameter.getType());
+      parameterType.setType(constraintDefParameter.getEType());
       return parameterType;
    }
    
