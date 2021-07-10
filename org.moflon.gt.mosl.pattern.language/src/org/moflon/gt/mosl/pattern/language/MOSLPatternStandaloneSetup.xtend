@@ -3,7 +3,7 @@
  */
 package org.moflon.gt.mosl.pattern.language
 
-
+import org.moflon.gt.mosl.pattern.language.MOSLPatternStandaloneSetupGenerated
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
  */

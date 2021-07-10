@@ -7,25 +7,24 @@ import org.moflon.gt.mosl.ide.ui.highlighting.AbstractHighlightProviderControlle
 import org.moflon.gt.mosl.ide.ui.highlighting.AbstractHighlightingConfiguration;
 import org.moflon.gt.mosl.ide.ui.highlighting.AbstractTokenMapper;
 
-
-
 public class DontIgnoreDefaultAndPunctuationHighlightingRule extends AbstractIgnoreHighlightingRule {
 
-public DontIgnoreDefaultAndPunctuationHighlightingRule(AbstractHighlightProviderController controller) {
+	public DontIgnoreDefaultAndPunctuationHighlightingRule(AbstractHighlightProviderController controller) {
 		super(controller);
 	}
 
 	@Override
 	protected boolean getIgnoreConditions(EObject moslObject, INode node) {
-		if(node != null && node.getGrammarElement() instanceof Keyword){
+		if (node != null && node.getGrammarElement() instanceof Keyword) {
 			return !isDefaultOrPunctuation(Keyword.class.cast(node.getGrammarElement()));
 		}
 		return false;
 	}
 
-	private boolean isDefaultOrPunctuation(Keyword keyword){
+	private boolean isDefaultOrPunctuation(Keyword keyword) {
 		String id = AbstractTokenMapper.getIDFromToken(keyword.getValue());
-		return id !=null && (id.equals(AbstractHighlightingConfiguration.DEFAULT_ID) || id.equals(AbstractHighlightingConfiguration.PUNCTUATION_ID));
+		return id != null && (id.equals(AbstractHighlightingConfiguration.DEFAULT_ID)
+				|| id.equals(AbstractHighlightingConfiguration.PUNCTUATION_ID));
 	}
 
 	@Override
@@ -37,6 +36,5 @@ public DontIgnoreDefaultAndPunctuationHighlightingRule(AbstractHighlightProvider
 	protected String description() {
 		return "An Ignore Highlighting Rule";
 	}
-
 
 }

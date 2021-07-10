@@ -10,12 +10,18 @@ import org.moflon.gt.mosl.ide.ui.highlighting.utils.XtextColorManager;
 
 /**
  * 
- * The AbstractHighlightingConfiguration provides the TextStyles to the TextEditor from Xtext.
- * So it needs for semantical highlighting the information of the TextStyles. It gets it from the {@link AbstractHighlightProviderController}
- * which gets the styles from the {@link AbstractHighlightingRule} provided by {@link AbstractSemanticHighlightingCalculator}. 
- * For special Token Highlighting for {@link AbstractHighlightingConfiguration} a static configuration like in {@link DefaultHighlightingConfiguration} has to be implemented.  
+ * The AbstractHighlightingConfiguration provides the TextStyles to the
+ * TextEditor from Xtext. So it needs for semantical highlighting the
+ * information of the TextStyles. It gets it from the
+ * {@link AbstractHighlightProviderController} which gets the styles from the
+ * {@link AbstractHighlightingRule} provided by
+ * {@link AbstractSemanticHighlightingCalculator}. For special Token
+ * Highlighting for {@link AbstractHighlightingConfiguration} a static
+ * configuration like in {@link DefaultHighlightingConfiguration} has to be
+ * implemented.
  * 
- * <h1> Example: </h1><i>A static Configuration</i><p>
+ * <h1>Example:</h1><i>A static Configuration</i>
+ * <p>
  * 
  * <pre>
  * <code>public class MyDSLHighlightingConfiguration extends AbstractHighlightingConfiguration{
@@ -49,13 +55,11 @@ import org.moflon.gt.mosl.ide.ui.highlighting.utils.XtextColorManager;
  *
  */
 
-public abstract class AbstractHighlightingConfiguration extends DefaultHighlightingConfiguration
-{
+public abstract class AbstractHighlightingConfiguration extends DefaultHighlightingConfiguration {
 	protected XtextColorManager colorManager;
 	private static Map<Class<? extends AbstractHighlightingConfiguration>, AbstractHighlightProviderController> staticContollers = new HashMap<>();
-	
-	
-	public AbstractHighlightingConfiguration(){
+
+	public AbstractHighlightingConfiguration() {
 		super();
 		this.colorManager = new XtextColorManager();
 		colorManager.setConfig(this);
@@ -63,17 +67,19 @@ public abstract class AbstractHighlightingConfiguration extends DefaultHighlight
 		controller.setColorManager(colorManager);
 		controller.setConfig(this);
 	}
-	
+
 	public void configure(IHighlightingConfigurationAcceptor acceptor) {
 		super.configure(acceptor);
-		staticContollers.get(this.getClass()).getHighlightRules().stream().forEach(conf -> conf.setHighlightingConfiguration(acceptor));
+		staticContollers.get(this.getClass()).getHighlightRules().stream()
+				.forEach(conf -> conf.setHighlightingConfiguration(acceptor));
 	}
-	
+
 	public XtextColorManager getColorManager() {
 		return colorManager;
 	}
-   
-	static void setController(Class<? extends AbstractHighlightingConfiguration> clazz, AbstractHighlightProviderController controller) {
+
+	static void setController(Class<? extends AbstractHighlightingConfiguration> clazz,
+			AbstractHighlightProviderController controller) {
 		staticContollers.put(clazz, controller);
 	}
 }

@@ -4,12 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.DefaultAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.util.Arrays;
+
 /**
- * The AbstractTokenMapper provides text highlighting for Xtext terminals or specific keywords.
- * The AbstractTokenMapper has to be implemented and an Injection has to be created;
+ * The AbstractTokenMapper provides text highlighting for Xtext terminals or
+ * specific keywords. The AbstractTokenMapper has to be implemented and an
+ * Injection has to be created;
  * 
- *	<h1>Example:</h1> <i>new Coloring for a terminal and a keyword</i> <p>
- *  <b><i>Xtext DSL file</i></b><p>
+ * <h1>Example:</h1> <i>new Coloring for a terminal and a keyword</i>
+ * <p>
+ * <b><i>Xtext DSL file</i></b>
+ * <p>
+ * 
  * <pre>
  * <code>
  * AnyXtextGrammarRule:'keyword' ...
@@ -18,7 +23,10 @@ import org.eclipse.xtext.util.Arrays;
  * </code>
  * </pre>
  * 
- * <p><b><i>TokenMapper file</i></b><p>
+ * <p>
+ * <b><i>TokenMapper file</i></b>
+ * <p>
+ * 
  * <pre>
  * <code>public class MyDSLTokenMapper extends AbstractTokenMapper{
  * 	{@literal @}Inject 
@@ -46,33 +54,33 @@ import org.eclipse.xtext.util.Arrays;
  */
 public abstract class AbstractTokenMapper extends DefaultAntlrTokenToAttributeIdMapper {
 
-	public AbstractTokenMapper(){
+	public AbstractTokenMapper() {
 		super();
 		init();
 	}
-	
+
 	private void init() {
-		mappedTokens.clear();		
+		mappedTokens.clear();
 	}
 
 	protected static Map<String, String> mappedTokens = new HashMap<>();
-	
-	private static final String[] delemiters = {":","{","}","(",")"};
-	
+
+	private static final String[] delemiters = { ":", "{", "}", "(", ")" };
+
 	@Override
 	protected String calculateId(String tokenName, int tokenType) {
 		String trimmedTokenName = tokenName.replaceAll("'", "");
-		String id = super.calculateId(tokenName, tokenType);		
+		String id = super.calculateId(tokenName, tokenType);
 
-		if(Arrays.contains(delemiters, trimmedTokenName)){
+		if (Arrays.contains(delemiters, trimmedTokenName)) {
 			id = AbstractHighlightingConfiguration.DEFAULT_ID;
 		}
-	
+
 		mappedTokens.put(trimmedTokenName, id);
 		return id;
 	}
-	
-	public static String getIDFromToken(String token){
+
+	public static String getIDFromToken(String token) {
 		String trimmedTokenName = token.replaceAll("'", "");
 		return mappedTokens.get(trimmedTokenName);
 	}

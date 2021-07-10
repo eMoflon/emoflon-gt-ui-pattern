@@ -17,12 +17,19 @@ import org.osgi.framework.wiring.BundleWiring;
 
 /**
  *
- * The HighlightAutoFactory creates all implementations of {@link AbstractHighlightingRule} which have the Annotation {@link RegisterRule}.
- * But there is one restriction only classes of the bundle where the {@link AbstractHighlightProviderController} is can be loaded. 
- * If Rules want to be used which are in a different bundle as the {@link AbstractHighlightProviderController} then there must be create a subclass from {@link HighlightAutoFactory} and override the method manuallyLoadedClasses. 
- * The Subclass of the HighlightAutoFactory must then be transfered to the {@link AbstractHighlightProviderController} Constructor.
+ * The HighlightAutoFactory creates all implementations of
+ * {@link AbstractHighlightingRule} which have the Annotation
+ * {@link RegisterRule}. But there is one restriction only classes of the bundle
+ * where the {@link AbstractHighlightProviderController} is can be loaded. If
+ * Rules want to be used which are in a different bundle as the
+ * {@link AbstractHighlightProviderController} then there must be create a
+ * subclass from {@link HighlightAutoFactory} and override the method
+ * manuallyLoadedClasses. The Subclass of the HighlightAutoFactory must then be
+ * transfered to the {@link AbstractHighlightProviderController} Constructor.
  * 
- * <h1>Example:</h1> <i>reuse or use {@link AbstractHighlightingRule}s from other {@link Bundle}s</i>  
+ * <h1>Example:</h1> <i>reuse or use {@link AbstractHighlightingRule}s from
+ * other {@link Bundle}s</i>
+ * 
  * <pre>
  * <code>public class MyHighlightFactory extends HighlightAutoFactory{ 
  * 	{@literal @}Override
@@ -31,6 +38,7 @@ import org.osgi.framework.wiring.BundleWiring;
  *  	} 
  * }</code>
  * </pre>
+ * 
  * @see AbstractHighlightProviderController
  * @see AbstractHighlightingRule
  * @see RegisterRule
@@ -40,46 +48,53 @@ import org.osgi.framework.wiring.BundleWiring;
  */
 public class HighlightAutoFactory {
 	protected AbstractHighlightProviderController controller;
-	
+
 	protected Logger logger;
-	
+
 	public HighlightAutoFactory() {
 		logger = Logger.getLogger(this.getClass());
 	}
-	
+
 	public void createAllInstances() {
 		String pluginName = WorkspaceHelper.getPluginId(controller.getClass());
 		Bundle bundle = FrameworkUtil.getBundle(controller.getClass());
 		BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
-		Collection<String> resources = bundleWiring.listResources(pluginName.replaceAll("\\.", "/"), "*.class", BundleWiring.LISTRESOURCES_RECURSE);
-		List<String> classNames = resources.parallelStream().map(resource -> resource.replaceAll("/", "\\.").replace(".class", "")).collect(Collectors.toList());
-		List<Class<?>> classes = classNames.parallelStream().map(className -> loadClass(className, bundle)).collect(Collectors.toList());
-		List<Class<?>> ruleClasses = classes.parallelStream().filter(this::isExecutableAndRegisteredRule).collect(Collectors.toList());
-		ruleClasses.addAll(manuallyLoadedClasses().parallelStream().filter(this::isConcreteHighlightingRule).map(classRule -> (Class<?>) classRule).collect(Collectors.toList()));
+		Collection<String> resources = bundleWiring.listResources(pluginName.replaceAll("\\.", "/"), "*.class",
+				BundleWiring.LISTRESOURCES_RECURSE);
+		List<String> classNames = resources.parallelStream()
+				.map(resource -> resource.replaceAll("/", "\\.").replace(".class", "")).collect(Collectors.toList());
+		List<Class<?>> classes = classNames.parallelStream().map(className -> loadClass(className, bundle))
+				.collect(Collectors.toList());
+		List<Class<?>> ruleClasses = classes.parallelStream().filter(this::isExecutableAndRegisteredRule)
+				.collect(Collectors.toList());
+		ruleClasses.addAll(manuallyLoadedClasses().parallelStream().filter(this::isConcreteHighlightingRule)
+				.map(classRule -> (Class<?>) classRule).collect(Collectors.toList()));
 		createInstances(ruleClasses);
 	}
-	
+
 	private boolean isExecutableAndRegisteredRule(Class<?> ruleClass) {
 		return isConcreteHighlightingRule(ruleClass) && ruleClass.isAnnotationPresent(RegisterRule.class);
 	}
-	
+
 	private boolean isConcreteHighlightingRule(Class<?> ruleClass) {
-		return ruleClass != null && AbstractHighlightingRule.class.isAssignableFrom(ruleClass) && !Modifier.isAbstract(ruleClass.getModifiers()) && hasCorrectConstructor(ruleClass);
+		return ruleClass != null && AbstractHighlightingRule.class.isAssignableFrom(ruleClass)
+				&& !Modifier.isAbstract(ruleClass.getModifiers()) && hasCorrectConstructor(ruleClass);
 	}
-	
+
 	private void createInstances(List<Class<?>> classes) {
 		classes.parallelStream().map(this::getConstructor).forEach(this::createInstance);
 	}
-	
+
 	private void createInstance(Constructor<?> constructor) {
 		try {
 			constructor.newInstance(controller);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException	| InvocationTargetException e) {
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
-	private Constructor<?> getConstructor(Class<?> clazz){
+
+	private Constructor<?> getConstructor(Class<?> clazz) {
 		try {
 			return clazz.getConstructor(AbstractHighlightProviderController.class);
 		} catch (NoSuchMethodException | SecurityException e) {
@@ -87,7 +102,7 @@ public class HighlightAutoFactory {
 			return null;
 		}
 	}
-	
+
 	private boolean hasCorrectConstructor(Class<?> clazz) {
 		try {
 			clazz.getConstructor(AbstractHighlightProviderController.class);
@@ -97,20 +112,22 @@ public class HighlightAutoFactory {
 			return false;
 		}
 	}
-	
-	void setController(AbstractHighlightProviderController controller){
+
+	void setController(AbstractHighlightProviderController controller) {
 		this.controller = controller;
 	}
-	
+
 	/**
-	 * Override this method to load classes from other bundles. The classes must be loaded in this method. 
+	 * Override this method to load classes from other bundles. The classes must be
+	 * loaded in this method.
+	 * 
 	 * @return the classes of implementation from AbstractHighlightingRules.
- 	 */
-	protected List<Class<? extends AbstractHighlightingRule>> manuallyLoadedClasses(){		
+	 */
+	protected List<Class<? extends AbstractHighlightingRule>> manuallyLoadedClasses() {
 		return new ArrayList<>();
 	}
-	
-	private Class<?> loadClass(String className, Bundle bundle){
+
+	private Class<?> loadClass(String className, Bundle bundle) {
 		try {
 			return bundle.loadClass(className);
 		} catch (ClassNotFoundException e) {
@@ -118,5 +135,5 @@ public class HighlightAutoFactory {
 			return null;
 		}
 	}
-	
+
 }
